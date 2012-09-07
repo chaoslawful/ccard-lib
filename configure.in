@@ -6,18 +6,25 @@ AC_INIT([ccard], [0.01], [qingwu@taobao.com])
 AC_CONFIG_SRCDIR([src/murmurhash.c])
 AC_CONFIG_HEADERS([config.h])
 
+AM_INIT_AUTOMAKE([ccard], [0.01])
+
 # Checks for programs.
 AC_PROG_CC
 
 # Checks for libraries.
 
 # Checks for header files.
+AC_CHECK_HEADERS([stdint.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
+AC_TYPE_INT64_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT64_T
+AC_TYPE_UINT8_T
 
 # Checks for library functions.
+AC_FUNC_MALLOC
+AC_CHECK_FUNCS([memset])
 
-AC_OUTPUT(Makefile)
+AC_OUTPUT
 
