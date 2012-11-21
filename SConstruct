@@ -4,7 +4,7 @@ def SymLink(target, source, env):
     os.symlink(os.path.abspath(str(source[0])), os.path.abspath(str(target[0])))
 
 ver = '0.1'
-name = 'ccard'
+name = 'ccard-lib'
 libdir = '/usr/local/lib/'
 
 env = Environment(
