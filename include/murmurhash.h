@@ -1,4 +1,4 @@
-#ifdef MURMURHASH_H__
+#ifndef MURMURHASH_H__
 #define MURMURHASH_H__
 
 #include <stdint.h>

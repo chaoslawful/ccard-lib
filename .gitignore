@@ -16,3 +16,6 @@
 *.out
 *.app
 
+# SConstruct caches
+.scons*
+

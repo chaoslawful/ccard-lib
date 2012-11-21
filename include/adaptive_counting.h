@@ -1,7 +1,6 @@
 #ifndef ADAPTIVE_COUNTING_H__
 #define ADAPTIVE_COUNTING_H__
 
-#include <stdint.h>
 #include "ccard_common.h"
 
 #ifdef __cplusplus
