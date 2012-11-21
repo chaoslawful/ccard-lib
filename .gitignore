@@ -16,3 +16,6 @@
 *.out
 *.app
 
+# Google Test
+t/Makefile
+t/*_unittest

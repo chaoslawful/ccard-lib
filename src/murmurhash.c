@@ -1,7 +1,9 @@
+#include <stdint.h>
 #include "murmurhash.h"
 
 uint32_t murmurhash(void *buf, uint32_t len, uint32_t seed)
 {
+    char *data = (char *)buf;
     uint32_t m = 0x5bd1e995;
     uint32_t r = 24;
     uint32_t h = seed ^ len;
