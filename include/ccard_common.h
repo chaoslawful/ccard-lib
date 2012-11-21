@@ -34,7 +34,7 @@ extern "C" {
         /// Merge several serialized bytes and combine their counts
         int     (*merge_bytes)(void *ctx, const void *buf, uint32_t len, ...);
         /// Deallocate algorithm ctx
-        int     (*fini)(void *buf);
+        int     (*fini)(void *ctx);
         /// Get error code from algorithm ctx
         int     (*errnum)(void *ctx);
         /// Convert error code to human-friendly messages
