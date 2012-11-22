@@ -16,6 +16,9 @@
 *.out
 *.app
 
+# Google test
+t/Makefile
+t/*_unittest
+
 # SConstruct caches
 .scons*
-

@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "murmurhash.h"
 
 uint32_t murmurhash(void *buf, uint32_t len, uint32_t seed)
