@@ -1,7 +1,6 @@
 #ifndef LOGLOG_COUNTING_H__
 #define LOGLOG_COUNTING_H__
 
-#include <stdint.h>
 #include "ccard_common.h"
 
 #ifdef __cplusplus
@@ -135,7 +134,7 @@ extern "C" {
 	 *
 	 * @see ll_cnt_merge, ll_cnt_get_bytes
      * */
-    int ll_cnt_merge_bytes(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len,
+    int ll_cnt_merge_bytes(ll_cnt_ctx_t *ctx, const void *buf, uint32_t len,
             ...);
 
     /**

@@ -1,6 +1,8 @@
 #ifndef CCARD_COMMON_H__
 #define CCARD_COMMON_H__
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

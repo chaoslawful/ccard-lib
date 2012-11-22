@@ -1,10 +1,13 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "loglog_counting.h"
 
 /**
  * Gamma function computed using SciLab
  * ((gamma(-(m.^(-1))).* ( (1-2.^(m.^(-1)))./log(2) )).^(-m)).*m
  * */
-static const double[] alpha = {
+static const double alpha[] = {
     0,
     0.44567926005415,
     1.2480639342271,
@@ -63,9 +66,10 @@ static uint8_t num_of_trail_zeros(uint32_t i)
     return n - (uint8_t)((i << 1) >> 31);
 }
 
-ll_cnt_ctx_t* ll_cnt_init(const void *buf, uint32_t len_or_k)
+ll_cnt_ctx_t* ll_cnt_init(const void *obuf, uint32_t len_or_k)
 {
     ll_cnt_ctx_t *ctx;
+    uint8_t *buf = (uint8_t*)obuf;
 
     if (len_or_k == 0) {
         // invalid buffer length or k
@@ -77,7 +81,7 @@ ll_cnt_ctx_t* ll_cnt_init(const void *buf, uint32_t len_or_k)
         uint32_t i;
         uint8_t k = num_of_trail_zeros(len_or_k);
 
-        if (len_or_k != (1 << k)) {
+        if (len_or_k != (uint32_t)(1 << k)) {
             // invalid buffer size, its length must be a power of 2
             return NULL;
         }
@@ -137,7 +141,7 @@ const char* ll_cnt_errstr(int err)
         NULL
     };
 
-    if (-err >= 0 && -err < sizeof(msg)/sizeof(msg[0])-1) {
+    if (-err >= 0 && -err < (int)(sizeof(msg)/sizeof(msg[0])-1)) {
         return msg[-err];
     }
 
