@@ -23,7 +23,7 @@ uint32_t murmurhash(void *buf, uint32_t len, uint32_t seed)
         k *= m;
         k ^= k >> r;
         k *= m;
-        k *= m;
+        h *= m;
         h ^= k;
     }
 
