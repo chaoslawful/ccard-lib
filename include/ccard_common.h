@@ -14,6 +14,7 @@ extern "C" {
     {
         CCARD_OK = 0,               ///< No error
         CCARD_ERR_INVALID_CTX = -1, ///< Invalid algorihm context
+        CCARD_ERR_UNABLE_CAL  = -2, ///< Math calculate error
         CCARD_ERR_PLACEHOLDER
     };
 
