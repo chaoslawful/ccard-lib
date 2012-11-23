@@ -1,5 +1,6 @@
 # Object files
 *.o
+*.os
 
 # Libraries
 *.lib
@@ -17,7 +18,6 @@
 *.app
 
 # Google test
-t/Makefile
 t/*_unittest
 
 # SConstruct caches

@@ -26,3 +26,5 @@ TEST(MurmurhashTest, Long) {
 
     EXPECT_EQ(148129653, murmurhash_long(longint));
 }
+
+// vi:ft=c ts=4 sw=4 fdm=marker et
