@@ -7,10 +7,18 @@
 extern "C" {
 #endif
 
-	/**
-	 * Opaque loglog counting context type
-	 * */
-	typedef struct ll_cnt_ctx_s ll_cnt_ctx_t;
+    /**
+     * Opaque loglog counting context type
+     * */
+    /* typedef struct ll_cnt_ctx_s ll_cnt_ctx_t; */
+    typedef struct ll_cnt_ctx_s {
+        int err;
+        uint8_t k;
+        uint32_t m;
+        double Ca;
+        uint32_t Rsum;
+        uint8_t M[1];
+    } ll_cnt_ctx_t;
 
     /**
      * Initialize loglog counting context with optional serialized bitmap.

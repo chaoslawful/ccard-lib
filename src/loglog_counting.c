@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+
+#include "murmurhash.h"
 #include "loglog_counting.h"
 
 /**
@@ -42,15 +45,6 @@ static const double alpha[] = {
     3299942.4347441
 };
 
-struct ll_cnt_ctx_s {
-    int err;
-    uint8_t k;      //bucket index length
-    uint32_t m;     //bucket number
-    double Ca;      //cardinality
-    uint32_t Rsum;  //sum of longest trail zeros each bucket
-    uint8_t M[1];
-};
-
 static uint8_t num_of_trail_zeros(uint32_t i)
 {
     uint32_t y;
@@ -86,7 +80,7 @@ ll_cnt_ctx_t* ll_cnt_init(const void *obuf, uint32_t len_or_k)
             return NULL;
         }
 
-        ctx = malloc(sizeof(ll_cnt_ctx_t) + len_or_k - 1);
+        ctx = (ll_cnt_ctx_t *)malloc(sizeof(ll_cnt_ctx_t) + len_or_k - 1);
         ctx->err = CCARD_OK;
         memcpy(ctx->M, buf, len_or_k);
         ctx->m = len_or_k;
@@ -103,11 +97,12 @@ ll_cnt_ctx_t* ll_cnt_init(const void *obuf, uint32_t len_or_k)
             return NULL;
         }
 
-        ctx = malloc(sizeof(ll_cnt_ctx_t) + (1 << len_or_k) - 1);
+        ctx = (ll_cnt_ctx_t *)malloc(sizeof(ll_cnt_ctx_t) + (1 << len_or_k) - 1);
         ctx->err = CCARD_OK;
         ctx->m = 1 << len_or_k;
         ctx->k = (uint8_t)len_or_k;
         ctx->Ca = alpha[len_or_k];
+        ctx->Rsum = 0;
         memset(ctx->M, 0, ctx->m);
     }
 
@@ -129,12 +124,13 @@ int ll_cnt_offer(ll_cnt_ctx_t *ctx, const void *buf, uint32_t len)
 {
     int modified = 0;
 
-    uint32_t x = murmurhash(buf, len, -1);
-    uint32_t j = x >> (31 - ctx->k);
-    uint8_t r = (uint8_t)(num_of_trail_zeros((x << ctx->k)) - ctx->k);
+    uint32_t x = murmurhash((void *)buf, len, -1);
+    uint32_t j = x >> (32 - ctx->k);
+    uint8_t r = (uint8_t)(num_of_trail_zeros(x << ctx->k) - ctx->k + 1);
     if (ctx->M[j] < r) {
         ctx->Rsum += r - ctx->M[j];
         ctx->M[j] = r;
+
         modified = 1;
     }
 
@@ -144,7 +140,6 @@ int ll_cnt_offer(ll_cnt_ctx_t *ctx, const void *buf, uint32_t len)
 int ll_cnt_reset(ll_cnt_ctx_t *ctx)
 {
     ctx->err = CCARD_OK;
-    ctx->Ca = 0;
     ctx->Rsum = 0;
     memset(ctx->M, 0, ctx->m);
 

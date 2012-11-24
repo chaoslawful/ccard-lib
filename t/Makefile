@@ -28,12 +28,11 @@ CXXFLAGS += -g -Wall -Wextra
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS = murmurhash_unittest
+TESTS = murmurhash_unittest loglog_counting_unittest
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
-GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
-                $(GTEST_DIR)/include/gtest/internal/*.h
+GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h $(GTEST_DIR)/include/gtest/internal/*.h
 
 # House-keeping build targets.
 
@@ -53,12 +52,10 @@ GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
 # conservative and not optimized.  This is fine as Google Test
 # compiles fast and for ordinary users its source rarely changes.
 gtest-all.o : $(GTEST_SRCS_)
-	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c \
-            $(GTEST_DIR)/src/gtest-all.cc
+	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c $(GTEST_DIR)/src/gtest-all.cc
 
 gtest_main.o : $(GTEST_SRCS_)
-	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c \
-            $(GTEST_DIR)/src/gtest_main.cc
+	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c $(GTEST_DIR)/src/gtest_main.cc
 
 gtest.a : gtest-all.o
 	$(AR) $(ARFLAGS) $@ $^
@@ -73,9 +70,17 @@ gtest_main.a : gtest-all.o gtest_main.o
 murmurhash.o : $(USER_DIR)/src/murmurhash.c $(USER_DIR)/include/murmurhash.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/src/murmurhash.c
 
-murmurhash_unittest.o : $(USER_DIR)/src/murmurhash.c \
-                     $(USER_DIR)/include/murmurhash.h $(GTEST_HEADERS)
+murmurhash_unittest.o : $(USER_DIR)/src/murmurhash.c $(USER_DIR)/include/murmurhash.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/t/murmurhash_unittest.c
 
 murmurhash_unittest : murmurhash.o murmurhash_unittest.o gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+loglog_counting.o : $(USER_DIR)/src/loglog_counting.c $(USER_DIR)/include/loglog_counting.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/src/loglog_counting.c
+
+loglog_counting_unittest.o : $(USER_DIR)/src/loglog_counting.c $(USER_DIR)/include/loglog_counting.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/t/loglog_counting_unittest.c
+
+loglog_counting_unittest : murmurhash.o loglog_counting.o loglog_counting_unittest.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
