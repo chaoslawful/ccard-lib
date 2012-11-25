@@ -10,7 +10,10 @@ extern "C" {
     /**
      * Opaque adaptive counting context type
      * */
-    typedef struct adp_cnt_ctx_s adp_cnt_ctx_t;
+    typedef struct adp_cnt_ctx_s {
+        ll_cnt_ctx_t *super;
+        uint32_t b_e;
+    } adp_cnt_ctx_t;
 
     /**
      * Initialize adaptive counting context with optional serialized bitmap.
@@ -25,7 +28,7 @@ extern "C" {
      *
      * @see adp_cnt_fini
      * */
-    adp_cnt_ctx_t* adp_cnt_init(const void *buf, uint32_t len_or_k);
+    adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k);
 
     /**
      * Retrieve the cardinality calculated from bitmap in the context.
