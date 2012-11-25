@@ -23,7 +23,7 @@ extern "C" {
      * methods.
      * @retval NULL If error occured.
      *
-	 * @see adp_cnt_fini
+     * @see adp_cnt_fini
      * */
     adp_cnt_ctx_t* adp_cnt_init(const void *buf, uint32_t len_or_k);
 
@@ -36,7 +36,7 @@ extern "C" {
      * success.
      * @retval -1 If error occured.
      *
-	 * @see adp_cnt_offer, adp_cnt_reset
+     * @see adp_cnt_offer, adp_cnt_reset
      * */
     int64_t adp_cnt_card(adp_cnt_ctx_t *ctx);
 
@@ -51,7 +51,7 @@ extern "C" {
      * @retval 0 If final counting isn't affected by the object.
      * @retval -1 If error occured.
      *
-	 * @see adp_cnt_card, adp_cnt_reset
+     * @see adp_cnt_card, adp_cnt_reset
      * */
     int adp_cnt_offer(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len);
 
@@ -63,7 +63,7 @@ extern "C" {
      * @retval 0 If success.
      * @retval -1 If error occured.
      *
-	 * @see adp_cnt_card, adp_cnt_offer
+     * @see adp_cnt_card, adp_cnt_offer
      * */
     int adp_cnt_reset(adp_cnt_ctx_t *ctx);
 
@@ -78,7 +78,7 @@ extern "C" {
      * @retval 0 If success.
      * @retval -1 If error occured.
      *
-	 * @see adp_cnt_merge, adp_cnt_merge_bytes
+     * @see adp_cnt_merge, adp_cnt_merge_bytes
      * */
     int adp_cnt_get_bytes(adp_cnt_ctx_t *ctx, void *buf, uint32_t *len);
 
@@ -104,7 +104,7 @@ extern "C" {
      * @retval 0 if all were merged successfully.
      * @retval -1 if error occured.
      *
-	 * @see adp_cnt_merge_bytes, adp_cnt_get_bytes
+     * @see adp_cnt_merge_bytes, adp_cnt_get_bytes
      * */
     int adp_cnt_merge(adp_cnt_ctx_t *ctx, adp_cnt_ctx_t *tbm, ...);
 
@@ -132,7 +132,7 @@ extern "C" {
      * @retval 0 if all were merged successfully.
      * @retval -1 if error occured.
      *
-	 * @see adp_cnt_merge, adp_cnt_get_bytes
+     * @see adp_cnt_merge, adp_cnt_get_bytes
      * */
     int adp_cnt_merge_bytes(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len,
             ...);
@@ -145,7 +145,7 @@ extern "C" {
      * @retval 0 if finalized successfully.
      * @retval -1 if error occured.
      *
-	 * @see adp_cnt_init
+     * @see adp_cnt_init
      * */
     int adp_cnt_fini(adp_cnt_ctx_t *ctx);
 

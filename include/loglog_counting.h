@@ -30,10 +30,10 @@ extern "C" {
      * @retval not-NULL An initialized context to be used with the rest of
      * methods.
      * @retval NULL If error occured.
-	 *
-	 * @see ll_cnt_fini
+     *
+     * @see ll_cnt_fini
      * */
-	ll_cnt_ctx_t* ll_cnt_init(const void *buf, uint32_t len_or_k);
+    ll_cnt_ctx_t* ll_cnt_init(const void *buf, uint32_t len_or_k);
 
     /**
      * Retrieve the cardinality calculated from bitmap in the context.
@@ -43,10 +43,10 @@ extern "C" {
      * @retval >=0 Calculated cardinality based on bitmap in the context if
      * success.
      * @retval -1 If error occured.
-	 *
-	 * @see ll_cnt_offer, ll_cnt_reset
+     *
+     * @see ll_cnt_offer, ll_cnt_reset
      * */
-	int64_t ll_cnt_card(ll_cnt_ctx_t *ctx);
+    int64_t ll_cnt_card(ll_cnt_ctx_t *ctx);
 
     /**
      * Offer a object to be distinct counted.
@@ -58,10 +58,10 @@ extern "C" {
      * @retval 1 If the object affected final counting.
      * @retval 0 If final counting isn't affected by the object.
      * @retval -1 If error occured.
-	 *
-	 * @see ll_cnt_card, ll_cnt_reset
+     *
+     * @see ll_cnt_card, ll_cnt_reset
      * */
-	int ll_cnt_offer(ll_cnt_ctx_t *ctx, const void *buf, uint32_t len);
+    int ll_cnt_offer(ll_cnt_ctx_t *ctx, const void *buf, uint32_t len);
 
     /**
      * Reset bitmap in the context, effectively clear cardinality to zero.
@@ -70,10 +70,10 @@ extern "C" {
      *
      * @retval 0 If success.
      * @retval -1 If error occured.
-	 *
-	 * @see ll_cnt_card, ll_cnt_offer
+     *
+     * @see ll_cnt_card, ll_cnt_offer
      * */
-	int ll_cnt_reset(ll_cnt_ctx_t *ctx);
+    int ll_cnt_reset(ll_cnt_ctx_t *ctx);
 
     /**
      * Get the serialized bitmap or bitmap length from context.
@@ -85,10 +85,10 @@ extern "C" {
      *
      * @retval 0 If success.
      * @retval -1 If error occured.
-	 *
-	 * @see ll_cnt_merge, ll_cnt_merge_bytes
+     *
+     * @see ll_cnt_merge, ll_cnt_merge_bytes
      * */
-	int ll_cnt_get_bytes(ll_cnt_ctx_t *ctx, void *buf, uint32_t *len);
+    int ll_cnt_get_bytes(ll_cnt_ctx_t *ctx, void *buf, uint32_t *len);
 
     /**
      * Merge several loglog counting context into the current one,
@@ -111,10 +111,10 @@ extern "C" {
      *
      * @retval 0 if all were merged successfully.
      * @retval -1 if error occured.
-	 *
-	 * @see ll_cnt_merge_bytes, ll_cnt_get_bytes
+     *
+     * @see ll_cnt_merge_bytes, ll_cnt_get_bytes
      * */
-	int ll_cnt_merge(ll_cnt_ctx_t *ctx, ll_cnt_ctx_t *tbm, ...);
+    int ll_cnt_merge(ll_cnt_ctx_t *ctx, ll_cnt_ctx_t *tbm, ...);
 
     /**
      * Merge several adaptive counting bitmap into the current context,
@@ -139,8 +139,8 @@ extern "C" {
      *
      * @retval 0 if all were merged successfully.
      * @retval -1 if error occured.
-	 *
-	 * @see ll_cnt_merge, ll_cnt_get_bytes
+     *
+     * @see ll_cnt_merge, ll_cnt_get_bytes
      * */
     int ll_cnt_merge_bytes(ll_cnt_ctx_t *ctx, const void *buf, uint32_t len,
             ...);
@@ -152,10 +152,10 @@ extern "C" {
      * 
      * @retval 0 if finalized successfully.
      * @retval -1 if error occured.
-	 *
-	 * @see ll_cnt_init
+     *
+     * @see ll_cnt_init
      * */
-	int ll_cnt_fini(ll_cnt_ctx_t *ctx);
+    int ll_cnt_fini(ll_cnt_ctx_t *ctx);
 
     /**
      * Get error status of the given context.
@@ -166,7 +166,7 @@ extern "C" {
      *
      * @see ll_cnt_errstr
      * */
-	int ll_cnt_errnum(ll_cnt_ctx_t *ctx);
+    int ll_cnt_errnum(ll_cnt_ctx_t *ctx);
 
     /**
      * Convert error status to human-friendly message.
@@ -178,12 +178,12 @@ extern "C" {
      *
      * @see ll_cnt_errnum
      * */
-	const char* ll_cnt_errstr(int errn);
+    const char* ll_cnt_errstr(int errn);
 
     /**
      * LogLog counting algorithm definition
      * */
-	extern ccard_algo_t *ll_algo;
+    extern ccard_algo_t *ll_algo;
 
 #ifdef __cplusplus
 }
