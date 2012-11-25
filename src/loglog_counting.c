@@ -163,7 +163,7 @@ int ll_cnt_reset(ll_cnt_ctx_t *ctx)
 int ll_cnt_get_bytes(ll_cnt_ctx_t *ctx, void *buf, uint32_t *len)
 {
     uint8_t algo = CCARD_ALGO_LOGLOG;
-    char *out = (char *)buf;
+    uint8_t *out = (uint8_t *)buf;
 
     if ((ctx == NULL) || (*len < ctx->m + 2)) {
         return -1;
@@ -201,23 +201,23 @@ int ll_cnt_merge(ll_cnt_ctx_t *ctx, ll_cnt_ctx_t *tbm, ...)
                 ctx->M[i] = tbm->M[i];
             }
         }
-    }
 
-    va_start(vl, tbm);
-    while((bm = va_arg(vl, ll_cnt_ctx_t*)) != NULL) {
-        if (bm->m != ctx->m) {
-            ctx->err = CCARD_ERR_MERGE_FAILED;
-            return -1;
-        }
+        va_start(vl, tbm);
+        while ((bm = va_arg(vl, ll_cnt_ctx_t *)) != NULL) {
+            if (bm->m != ctx->m) {
+                ctx->err = CCARD_ERR_MERGE_FAILED;
+                return -1;
+            }
 
-        for (i = 1; i < ctx->m; i++) {
-            if (bm->M[i] > ctx->M[i]) {
-                ctx->Rsum += bm->M[i] - ctx->M[i];
-                ctx->M[i] = bm->M[i];
+            for (i = 1; i < ctx->m; i++) {
+                if (bm->M[i] > ctx->M[i]) {
+                    ctx->Rsum += bm->M[i] - ctx->M[i];
+                    ctx->M[i] = bm->M[i];
+                }
             }
         }
+        va_end(vl);
     }
-    va_end(vl);
 
     ctx->err = CCARD_OK;
     return 0;
@@ -225,6 +225,42 @@ int ll_cnt_merge(ll_cnt_ctx_t *ctx, ll_cnt_ctx_t *tbm, ...)
 
 int ll_cnt_merge_bytes(ll_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
 {
+    va_list vl;
+    uint8_t *in;
+    ll_cnt_ctx_t *bctx;
+
+    if (ctx == NULL) {
+        return -1;
+    }
+
+    if (buf != NULL) {
+        in = (uint8_t *)buf;
+        if ((ctx->m + 2 != len) || (in[0] != CCARD_ALGO_LOGLOG)) {
+            ctx->err = CCARD_ERR_MERGE_FAILED;
+            return -1;
+        }
+
+        bctx = ll_cnt_init(in + 2, ctx->m);
+        ll_cnt_merge(ctx, bctx, NULL);
+        ll_cnt_fini(bctx);
+
+        va_start(vl, len);
+        while ((in = (uint8_t *)va_arg(vl, const void *)) != NULL) {
+            len = va_arg(vl, uint32_t);
+
+            if ((ctx->m + 2 != len) || (in[0] != CCARD_ALGO_LOGLOG)) {
+                ctx->err = CCARD_ERR_MERGE_FAILED;
+                return -1;
+            }
+
+            bctx = ll_cnt_init(in + 2, ctx->m);
+            ll_cnt_merge(ctx, bctx, NULL);
+            ll_cnt_fini(bctx);
+        }
+        va_end(vl);
+    }
+
+    ctx->err = CCARD_OK;
     return 0;
 }
 

@@ -108,6 +108,44 @@ TEST(LogLogCounting, Merge) {
     //Bitmap with different size will cause error.
     EXPECT_EQ(-1, ll_cnt_merge(ctx, tbm4, NULL));
 
+    ll_cnt_fini(tbm3);
+    ll_cnt_fini(tbm2);
+    ll_cnt_fini(tbm1);
+    ll_cnt_fini(ctx);
+}
+
+/**
+ * Tests LogLog serialize and unserialize.
+ *
+ * <p>
+ * </p>
+ * */
+TEST(LogLogCounting, MergeByte) {
+    int64_t i, esti;
+    ll_cnt_ctx_t *ctx = ll_cnt_init(NULL, 16);
+    ll_cnt_ctx_t *tbm1 = ll_cnt_init(NULL, 16);
+    ll_cnt_ctx_t *tbm2 = ll_cnt_init(NULL, 16);
+    uint8_t buf1[tbm1->m + 2], buf2[tbm2->m + 2];
+    uint32_t len1 = tbm1->m + 2, len2 = tbm2->m + 2;
+
+    for (i = 0; i < 2000000L; i++) {
+        ll_cnt_offer(ctx, &i, sizeof(uint64_t));
+    }
+    for (i = 1000000L; i < 3000000L; i++) {
+        ll_cnt_offer(tbm1, &i, sizeof(uint64_t));
+    }
+    ll_cnt_get_bytes(tbm1, buf1, &len1);
+    for (i = 2000000L; i < 4000000L; i++) {
+        ll_cnt_offer(tbm2, &i, sizeof(uint64_t));
+    }
+    ll_cnt_get_bytes(tbm2, buf2, &len2);
+
+    ll_cnt_merge_bytes(ctx, buf1, len1, buf2, len2, NULL);
+    esti = ll_cnt_card(ctx);
+    printf("actual:4000000, estimated: %u, error: %.2f%%\n", esti, fabs((double)(esti - 4000000) / 4000000 * 100));
+
+    ll_cnt_fini(tbm2);
+    ll_cnt_fini(tbm1);
     ll_cnt_fini(ctx);
 }
 

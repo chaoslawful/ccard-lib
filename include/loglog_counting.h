@@ -116,7 +116,7 @@ extern "C" {
     int ll_cnt_merge(ll_cnt_ctx_t *ctx, ll_cnt_ctx_t *tbm, ...);
 
     /**
-     * Merge several adaptive counting bitmap into the current context,
+     * Merge several loglog counting bitmap into the current context,
      * effectively combined all distinct countings.
      *
      * Usage:
