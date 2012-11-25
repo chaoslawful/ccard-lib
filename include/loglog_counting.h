@@ -10,7 +10,6 @@ extern "C" {
     /**
      * Opaque loglog counting context type
      * */
-    /* typedef struct ll_cnt_ctx_s ll_cnt_ctx_t; */
     typedef struct ll_cnt_ctx_s {
         int err;
         uint8_t k;

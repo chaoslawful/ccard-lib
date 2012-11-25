@@ -19,6 +19,16 @@ extern "C" {
     };
 
     /**
+     * Algorithms
+     * */
+    enum
+    {
+        CCARD_ALGO_LOGLOG   = 1,
+        CCARD_ALGO_ADAPTIVE = 2,
+        CCARD_ALGO_PLACEHOLDER
+    };
+
+    /**
      * C-card algorithm definition
      * */
     typedef struct ccard_algo_s {

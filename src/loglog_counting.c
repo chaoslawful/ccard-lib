@@ -115,7 +115,6 @@ int64_t ll_cnt_card(ll_cnt_ctx_t *ctx)
     double Ravg;
 
     if (ctx == NULL) {
-        ctx->err = CCARD_ERR_INVALID_CTX;
         return -1;
     }
 
@@ -131,7 +130,6 @@ int ll_cnt_offer(ll_cnt_ctx_t *ctx, const void *buf, uint32_t len)
     uint8_t r;
 
     if (ctx == NULL) {
-        ctx->err = CCARD_ERR_INVALID_CTX;
         return -1;
     }
 
@@ -152,7 +150,6 @@ int ll_cnt_offer(ll_cnt_ctx_t *ctx, const void *buf, uint32_t len)
 int ll_cnt_reset(ll_cnt_ctx_t *ctx)
 {
     if (ctx == NULL) {
-        ctx->err = CCARD_ERR_INVALID_CTX;
         return -1;
     }
 
@@ -163,13 +160,32 @@ int ll_cnt_reset(ll_cnt_ctx_t *ctx)
     return 0;
 }
 
-int ll_cnt_merge(ll_cnt_ctx_t *ctx, ll_cnt_ctx_t *tbm, ...) {
+int ll_cnt_get_bytes(ll_cnt_ctx_t *ctx, void *buf, uint32_t *len)
+{
+    uint8_t algo = CCARD_ALGO_LOGLOG;
+    char *out = (char *)buf;
+
+    if ((ctx == NULL) || (*len < ctx->m + 2)) {
+        return -1;
+    }
+
+    if (buf) {
+        out[0] = algo;
+        out[1] = ctx->k;
+        memcpy(out + 2, ctx->M, ctx->m);
+    }
+    *len = ctx->m + 2;
+
+    return 0;
+}
+
+int ll_cnt_merge(ll_cnt_ctx_t *ctx, ll_cnt_ctx_t *tbm, ...)
+{
     va_list vl;
     ll_cnt_ctx_t *bm;
     uint32_t i;
 
     if (ctx == NULL) {
-        ctx->err = CCARD_ERR_INVALID_CTX;
         return -1;
     }
 
@@ -204,6 +220,11 @@ int ll_cnt_merge(ll_cnt_ctx_t *ctx, ll_cnt_ctx_t *tbm, ...) {
     va_end(vl);
 
     ctx->err = CCARD_OK;
+    return 0;
+}
+
+int ll_cnt_merge_bytes(ll_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
+{
     return 0;
 }
 
