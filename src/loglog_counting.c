@@ -288,7 +288,7 @@ const char* ll_cnt_errstr(int err)
     static const char *msg[] = {
         "No error",
         "Invalid algorithm context",
-        "Merge two or more bitmap into one failed",
+        "Merge bitmap failed",
         NULL
     };
 

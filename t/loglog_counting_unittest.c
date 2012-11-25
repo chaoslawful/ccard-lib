@@ -34,10 +34,7 @@ TEST(LogLogCounting, InitCtxEmpty) {
 TEST(LogLogCounting, InitCtxBitmap) {
     uint32_t m = pow(2, 16);
     uint8_t bitmap[m];
-    int i;
-    for (i = 0; i < m; i++) {
-        bitmap[i] = (uint8_t)10;
-    }
+    memset(bitmap, 10, m);
 
     ll_cnt_ctx_t *ctx = ll_cnt_init(bitmap, m);
 
