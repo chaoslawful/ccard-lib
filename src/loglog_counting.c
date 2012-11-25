@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 #include <math.h>
 
 #include "murmurhash.h"
@@ -162,6 +163,50 @@ int ll_cnt_reset(ll_cnt_ctx_t *ctx)
     return 0;
 }
 
+int ll_cnt_merge(ll_cnt_ctx_t *ctx, ll_cnt_ctx_t *tbm, ...) {
+    va_list vl;
+    ll_cnt_ctx_t *bm;
+    uint32_t i;
+
+    if (ctx == NULL) {
+        ctx->err = CCARD_ERR_INVALID_CTX;
+        return -1;
+    }
+
+    if (tbm != NULL) {
+        if (tbm->m != ctx->m) {
+            ctx->err = CCARD_ERR_MERGE_FAILED;
+            return -1;
+        }
+
+        for (i = 1; i < ctx->m; i++) {
+            if (tbm->M[i] > ctx->M[i]) {
+                ctx->Rsum += tbm->M[i] - ctx->M[i];
+                ctx->M[i] = tbm->M[i];
+            }
+        }
+    }
+
+    va_start(vl, tbm);
+    while((bm = va_arg(vl, ll_cnt_ctx_t*)) != NULL) {
+        if (bm->m != ctx->m) {
+            ctx->err = CCARD_ERR_MERGE_FAILED;
+            return -1;
+        }
+
+        for (i = 1; i < ctx->m; i++) {
+            if (bm->M[i] > ctx->M[i]) {
+                ctx->Rsum += bm->M[i] - ctx->M[i];
+                ctx->M[i] = bm->M[i];
+            }
+        }
+    }
+    va_end(vl);
+
+    ctx->err = CCARD_OK;
+    return 0;
+}
+
 int ll_cnt_fini(ll_cnt_ctx_t *ctx)
 {
     if (ctx) {
@@ -186,6 +231,7 @@ const char* ll_cnt_errstr(int err)
     static const char *msg[] = {
         "No error",
         "Invalid algorithm context",
+        "Merge two or more bitmap into one failed",
         NULL
     };
 

@@ -12,8 +12,9 @@ extern "C" {
      * */
     enum
     {
-        CCARD_OK = 0,               ///< No error
-        CCARD_ERR_INVALID_CTX = -1, ///< Invalid algorihm context
+        CCARD_OK = 0,                ///< No error
+        CCARD_ERR_INVALID_CTX  = -1, ///< Invalid algorihm context
+        CCARD_ERR_MERGE_FAILED = -2, ///< Merge failed
         CCARD_ERR_PLACEHOLDER
     };
 
