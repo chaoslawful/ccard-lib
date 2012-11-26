@@ -188,12 +188,10 @@ int adp_cnt_offer(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len)
 
 int adp_cnt_get_bytes(adp_cnt_ctx_t *ctx, void *buf, uint32_t *len)
 {
-    /**
-     * Serials format: [ALGO LEN BITMAP]
-     *
-     * ALGO     1 byte      algorithm number
-     * LEN      1 byte      base-2 logarithm of the bitmap length
-     * BITMAP   len bytes   data serials
+    /*
+     +--------------+------------------------------+-----------+
+     | algorithm[1] | bitmap length(base-2 log)[1] | bitmap[n] |
+     +--------------+------------------------------+-----------+
      */
     uint8_t algo = CCARD_ALGO_ADAPTIVE;
     uint8_t *out = (uint8_t *)buf;
