@@ -24,7 +24,7 @@ adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k)
         return NULL;
     }
 
-    ll_cnt_init(ll_ctx, buf, len_or_k);
+    ll_ctx = ll_cnt_init(buf, len_or_k);
     if (ll_ctx == NULL) {
         return NULL;
     }

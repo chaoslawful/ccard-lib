@@ -28,7 +28,9 @@ CXXFLAGS += -g -Wall -Wextra
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS = murmurhash_unittest loglog_counting_unittest
+TESTS = murmurhash_unittest \
+		loglog_counting_unittest \
+		adaptive_counting_unittest
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -67,20 +69,37 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 
-murmurhash.o : $(USER_DIR)/src/murmurhash.c $(USER_DIR)/include/murmurhash.h $(GTEST_HEADERS)
+murmurhash.o : $(USER_DIR)/src/murmurhash.c \
+	$(USER_DIR)/include/murmurhash.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/src/murmurhash.c
 
-murmurhash_unittest.o : $(USER_DIR)/src/murmurhash.c $(USER_DIR)/include/murmurhash.h $(GTEST_HEADERS)
+murmurhash_unittest.o : $(USER_DIR)/src/murmurhash.c \
+	$(USER_DIR)/include/murmurhash.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/t/murmurhash_unittest.c
 
 murmurhash_unittest : murmurhash.o murmurhash_unittest.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
-loglog_counting.o : $(USER_DIR)/src/loglog_counting.c $(USER_DIR)/include/loglog_counting.h $(GTEST_HEADERS)
+loglog_counting.o : $(USER_DIR)/src/loglog_counting.c \
+	$(USER_DIR)/include/loglog_counting.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/src/loglog_counting.c
 
-loglog_counting_unittest.o : $(USER_DIR)/src/loglog_counting.c $(USER_DIR)/include/loglog_counting.h $(GTEST_HEADERS)
+loglog_counting_unittest.o : $(USER_DIR)/src/loglog_counting.c \
+	$(USER_DIR)/include/loglog_counting.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/t/loglog_counting_unittest.c
 
-loglog_counting_unittest : murmurhash.o loglog_counting.o loglog_counting_unittest.o gtest_main.a
+loglog_counting_unittest : murmurhash.o \
+	loglog_counting.o loglog_counting_unittest.o gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+adaptive_counting.o : $(USER_DIR)/src/adaptive_counting.c \
+	$(USER_DIR)/include/adaptive_counting.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/src/adaptive_counting.c
+
+adaptive_counting_unittest.o : $(USER_DIR)/src/adaptive_counting.c \
+	$(USER_DIR)/include/adaptive_counting.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/t/adaptive_counting_unittest.c
+
+adaptive_counting_unittest : murmurhash.o loglog_counting.o \
+	adaptive_counting.o adaptive_counting_unittest.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
