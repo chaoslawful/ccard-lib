@@ -29,6 +29,7 @@ CXXFLAGS += -g -Wall -Wextra
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
 TESTS = murmurhash_unittest \
+		lookup3hash_unittest \
 		adaptive_counting_unittest
 
 # All Google Test headers.  Usually you shouldn't change this
@@ -79,6 +80,17 @@ murmurhash_unittest.o : $(USER_DIR)/src/murmurhash.c \
 murmurhash_unittest : murmurhash.o murmurhash_unittest.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
+lookup3hash.o : $(USER_DIR)/src/lookup3hash.c \
+	$(USER_DIR)/include/lookup3hash.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/src/lookup3hash.c
+
+lookup3hash_unittest.o : $(USER_DIR)/src/lookup3hash.c \
+	$(USER_DIR)/include/lookup3hash.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/t/lookup3hash_unittest.c
+
+lookup3hash_unittest : lookup3hash.o lookup3hash_unittest.o gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
 adaptive_counting.o : $(USER_DIR)/src/adaptive_counting.c \
 	$(USER_DIR)/include/adaptive_counting.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/src/adaptive_counting.c
@@ -87,6 +99,6 @@ adaptive_counting_unittest.o : $(USER_DIR)/src/adaptive_counting.c \
 	$(USER_DIR)/include/adaptive_counting.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/t/adaptive_counting_unittest.c
 
-adaptive_counting_unittest : murmurhash.o \
+adaptive_counting_unittest : lookup3hash.o \
 	adaptive_counting.o adaptive_counting_unittest.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@

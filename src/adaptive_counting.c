@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <math.h>
-#include "murmurhash.h"
+#include "lookup3hash.h"
 #include "adaptive_counting.h"
 
 struct adp_cnt_ctx_s {
@@ -60,19 +60,20 @@ static const double alpha[] = {
  */
 static const double B_s = 0.051;
 
-static uint8_t num_of_trail_zeros(uint32_t i)
+static uint8_t num_of_trail_zeros(uint64_t i)
 {
-    uint32_t y;
-    uint8_t n = 31;
+    uint64_t y;
+    uint8_t n = 63;
 
     if (i == 0)
-        return 32;
+        return 64;
 
+    y = i << 32;    if (y != 0) { n -= 32; i = y; }
     y = i << 16;    if (y != 0) { n -= 16; i = y; }
     y = i << 8;     if (y != 0) { n -= 8; i = y; }
     y = i << 4;     if (y != 0) { n -= 4; i = y; }
     y = i << 2;     if (y != 0) { n -= 2; i = y; }
-    return n - (uint8_t)((i << 1) >> 31);
+    return n - (uint8_t)((i << 1) >> 63);
 }
 
 adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k)
@@ -161,7 +162,7 @@ int64_t adp_cnt_card(adp_cnt_ctx_t *ctx)
 int adp_cnt_offer(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len)
 {
     int modified = 0;
-    uint32_t x, j;
+    uint64_t x, j;
     uint8_t r;
 
     if (!ctx) {
@@ -169,9 +170,8 @@ int adp_cnt_offer(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len)
     }
 
     ctx->err = CCARD_OK;
-    /* TODO: use lookup3 hash */
-    x = murmurhash((void *)buf, len, -1);
-    j = x >> (32 - ctx->k);
+    x = lookup3ycs64_2((const char *)buf);
+    j = x >> (64 - ctx->k);
     r = (uint8_t)(num_of_trail_zeros(x << ctx->k) - ctx->k + 1);
     if (ctx->M[j] < r) {
         ctx->Rsum += r - ctx->M[j];
