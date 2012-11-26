@@ -10,10 +10,7 @@ extern "C" {
     /**
      * Opaque adaptive counting context type
      * */
-    typedef struct adp_cnt_ctx_s {
-        ll_cnt_ctx_t *super;
-        uint32_t b_e;
-    } adp_cnt_ctx_t;
+    typedef struct adp_cnt_ctx_s adp_cnt_ctx_t;
 
     /**
      * Initialize adaptive counting context with optional serialized bitmap.
@@ -31,7 +28,20 @@ extern "C" {
     adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k);
 
     /**
-     * Retrieve the cardinality calculated from bitmap in the context.
+     * Retrieve the cardinality calculated from bitmap in the context using LogLog Counting.
+     *
+     * @param[in] ctx Pointer to the context.
+     *
+     * @retval >=0 Calculated cardinality based on bitmap in the context if
+     * success.
+     * @retval -1 If error occured.
+     *
+     * @see adp_cnt_offer, adp_cnt_reset
+     * */
+    int64_t adp_cnt_card_loglog(adp_cnt_ctx_t *ctx);
+
+    /**
+     * Retrieve the cardinality calculated from bitmap in the context using Adaptive Counting.
      *
      * @param[in] ctx Pointer to the context.
      *
