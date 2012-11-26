@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdarg.h>
 #include <math.h>
-
 #include "murmurhash.h"
 #include "loglog_counting.h"
 #include "adaptive_counting.h"
@@ -34,13 +33,36 @@ adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k)
     ctx->super = ll_ctx;
     ctx->b_e = 0;
 
-    for (i = 0; i < ll_ctx->m; i++) {
-        if (ll_ctx->M[i] == 0) {
-            ctx->b_e++;
+    if (obuf) {
+        for (i = 0; i < ll_ctx->m; i++) {
+            if (ll_ctx->M[i] == 0) {
+                ctx->b_e++;
+            }
         }
     }
 
     return ctx;
+}
+
+int64_t adp_cnt_card(adp_cnt_ctx_t *ctx)
+{
+    double B = (ctx->b_e / (double)ctx->super->m);
+
+    if (!ctx) {
+        return -1;
+    }
+    ctx->super->err = CCARD_OK;
+
+    if (B >= B_s) {
+        return (int64_t)round(-1 * ctx->super->m * log(B));
+    }
+
+    return ll_cnt_card(ctx->super);
+}
+
+int adp_cnt_offer(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len)
+{
+    return 0;
 }
 
 int adp_cnt_fini(adp_cnt_ctx_t *ctx)

@@ -161,6 +161,13 @@ int ll_cnt_reset(ll_cnt_ctx_t *ctx)
 
 int ll_cnt_get_bytes(ll_cnt_ctx_t *ctx, void *buf, uint32_t *len)
 {
+    /**
+     * Serials format: [ALGO LEN BITMAP]
+     *
+     * ALGO     1 byte      algorithm number
+     * LEN      1 byte      base-2 logarithm of the bitmap length
+     * BITMAP   len bytes   data serials
+     */
     uint8_t algo = CCARD_ALGO_LOGLOG;
     uint8_t *out = (uint8_t *)buf;
 
