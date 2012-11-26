@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdarg.h>
 #include <math.h>
-
 #include "murmurhash.h"
 #include "loglog_counting.h"
 
@@ -114,7 +113,7 @@ int64_t ll_cnt_card(ll_cnt_ctx_t *ctx)
 {
     double Ravg;
 
-    if (ctx == NULL) {
+    if (!ctx) {
         return -1;
     }
 
@@ -129,7 +128,7 @@ int ll_cnt_offer(ll_cnt_ctx_t *ctx, const void *buf, uint32_t len)
     uint32_t x, j;
     uint8_t r;
 
-    if (ctx == NULL) {
+    if (!ctx) {
         return -1;
     }
 
@@ -149,7 +148,7 @@ int ll_cnt_offer(ll_cnt_ctx_t *ctx, const void *buf, uint32_t len)
 
 int ll_cnt_reset(ll_cnt_ctx_t *ctx)
 {
-    if (ctx == NULL) {
+    if (!ctx) {
         return -1;
     }
 
@@ -165,14 +164,14 @@ int ll_cnt_get_bytes(ll_cnt_ctx_t *ctx, void *buf, uint32_t *len)
     uint8_t algo = CCARD_ALGO_LOGLOG;
     uint8_t *out = (uint8_t *)buf;
 
-    if ((ctx == NULL) || (*len < ctx->m + 2)) {
+    if (!ctx || (*len < ctx->m + 2)) {
         return -1;
     }
 
     if (buf) {
         out[0] = algo;
         out[1] = ctx->k;
-        memcpy(out + 2, ctx->M, ctx->m);
+        memcpy(&out[2], ctx->M, ctx->m);
     }
     *len = ctx->m + 2;
 
@@ -185,11 +184,12 @@ int ll_cnt_merge(ll_cnt_ctx_t *ctx, ll_cnt_ctx_t *tbm, ...)
     ll_cnt_ctx_t *bm;
     uint32_t i;
 
-    if (ctx == NULL) {
+    if (!ctx) {
         return -1;
     }
 
-    if (tbm != NULL) {
+    if (tbm) {
+        /* Cannot merge bitmap of different sizes */
         if (tbm->m != ctx->m) {
             ctx->err = CCARD_ERR_MERGE_FAILED;
             return -1;
@@ -229,18 +229,19 @@ int ll_cnt_merge_bytes(ll_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
     uint8_t *in;
     ll_cnt_ctx_t *bctx;
 
-    if (ctx == NULL) {
+    if (!ctx) {
         return -1;
     }
 
-    if (buf != NULL) {
+    if (buf) {
         in = (uint8_t *)buf;
+        /* Cannot merge bitmap of different sizes or different algorithms */
         if ((ctx->m + 2 != len) || (in[0] != CCARD_ALGO_LOGLOG)) {
             ctx->err = CCARD_ERR_MERGE_FAILED;
             return -1;
         }
 
-        bctx = ll_cnt_init(in + 2, ctx->m);
+        bctx = ll_cnt_init(&in[2], ctx->m);
         ll_cnt_merge(ctx, bctx, NULL);
         ll_cnt_fini(bctx);
 
@@ -253,7 +254,7 @@ int ll_cnt_merge_bytes(ll_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
                 return -1;
             }
 
-            bctx = ll_cnt_init(in + 2, ctx->m);
+            bctx = ll_cnt_init(&in[2], ctx->m);
             ll_cnt_merge(ctx, bctx, NULL);
             ll_cnt_fini(bctx);
         }
