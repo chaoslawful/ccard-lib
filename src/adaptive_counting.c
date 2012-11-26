@@ -12,6 +12,21 @@
  */
 static const double B_s = 0.051;
 
+static uint8_t num_of_trail_zeros(uint32_t i)
+{
+    uint32_t y;
+    uint8_t n = 31;
+
+    if (i == 0)
+        return 32;
+
+    y = i << 16;    if (y != 0) { n -= 16; i = y; }
+    y = i << 8;     if (y != 0) { n -= 8; i = y; }
+    y = i << 4;     if (y != 0) { n -= 4; i = y; }
+    y = i << 2;     if (y != 0) { n -= 2; i = y; }
+    return n - (uint8_t)((i << 1) >> 31);
+}
+
 adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k)
 {
     adp_cnt_ctx_t *ctx;
@@ -31,12 +46,12 @@ adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k)
 
     ctx = (adp_cnt_ctx_t *)malloc(sizeof(adp_cnt_ctx_t));
     ctx->super = ll_ctx;
-    ctx->b_e = 0;
+    ctx->b_e = ll_ctx->m;
 
     if (obuf) {
         for (i = 0; i < ll_ctx->m; i++) {
-            if (ll_ctx->M[i] == 0) {
-                ctx->b_e++;
+            if (ll_ctx->M[i] != 0) {
+                ctx->b_e--;
             }
         }
     }
@@ -46,15 +61,15 @@ adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k)
 
 int64_t adp_cnt_card(adp_cnt_ctx_t *ctx)
 {
-    double B = (ctx->b_e / (double)ctx->super->m);
+    double B = ctx->b_e / (double)ctx->super->m;
 
-    if (!ctx) {
+    if (!ctx || !ctx->super) {
         return -1;
     }
     ctx->super->err = CCARD_OK;
 
     if (B >= B_s) {
-        return (int64_t)round(-1 * ctx->super->m * log(B));
+        return (int64_t)round((-(double)ctx->super->m) * log(B));
     }
 
     return ll_cnt_card(ctx->super);
@@ -62,6 +77,42 @@ int64_t adp_cnt_card(adp_cnt_ctx_t *ctx)
 
 int adp_cnt_offer(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len)
 {
+    int modified = 0;
+    uint32_t x, j;
+    uint8_t r;
+
+    if (!ctx || !ctx->super) {
+        return -1;
+    }
+
+    ctx->super->err = CCARD_OK;
+    /* TODO: use lookup3 hash */
+    x = murmurhash((void *)buf, len, -1);
+    j = x >> (32 - ctx->super->k);
+    r = (uint8_t)(num_of_trail_zeros(x << ctx->super->k) - ctx->super->k + 1);
+    if (ctx->super->M[j] < r) {
+        ctx->super->Rsum += r - ctx->super->M[j];
+        if (ctx->super->M[j] == 0) {
+            ctx->b_e--;
+        }
+        ctx->super->M[j] = r;
+
+        modified = 1;
+    }
+
+    return modified;
+}
+
+int adp_cnt_reset(adp_cnt_ctx_t *ctx)
+{
+    if (!ctx || !ctx->super) {
+        return -1;
+    }
+
+    ctx->super->err = CCARD_OK;
+    ll_cnt_reset(ctx->super);
+    ctx->b_e = ctx->super->m;
+
     return 0;
 }
 
