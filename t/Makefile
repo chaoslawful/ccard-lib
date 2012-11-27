@@ -30,6 +30,7 @@ CXXFLAGS += -g -Wall -Wextra
 # created to the list.
 TESTS = murmurhash_unittest \
 		lookup3hash_unittest \
+		register_set_unittest \
 		adaptive_counting_unittest
 
 # All Google Test headers.  Usually you shouldn't change this
@@ -89,6 +90,17 @@ lookup3hash_unittest.o : $(USER_DIR)/src/lookup3hash.c \
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/t/lookup3hash_unittest.c
 
 lookup3hash_unittest : lookup3hash.o lookup3hash_unittest.o gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+register_set.o : $(USER_DIR)/src/register_set.c \
+	$(USER_DIR)/include/register_set.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/src/register_set.c
+
+register_set_unittest.o : $(USER_DIR)/src/register_set.c \
+	$(USER_DIR)/include/register_set.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/t/register_set_unittest.c
+
+register_set_unittest : register_set.o register_set_unittest.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
 adaptive_counting.o : $(USER_DIR)/src/adaptive_counting.c \
