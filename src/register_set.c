@@ -15,14 +15,14 @@ static const uint32_t LOG2_BITS_PER_WORD = 6;
 
 static const uint32_t REGISTER_SIZE = 5;
 
-static uint32_t reg_set_getbits(uint32_t count)
+static uint32_t rs_getbits(uint32_t count)
 {
     return (uint32_t)floor(count / LOG2_BITS_PER_WORD);
 }
 
 reg_set_t *rs_init(uint32_t count, uint32_t *values, uint32_t len)
 {
-    uint32_t bits = reg_set_getbits(count);
+    uint32_t bits = rs_getbits(count);
     reg_set_t *rs;
 
     if (values) {
