@@ -142,8 +142,8 @@ int64_t adp_cnt_card_loglog(adp_cnt_ctx_t *ctx)
         return -1;
     }
 
-    ctx->err = CCARD_OK;
     Ravg = ctx->Rsum / (double)ctx->m;
+    ctx->err = CCARD_OK;
     return (int64_t)(ctx->Ca * pow(2, Ravg));
 }
 
@@ -154,12 +154,12 @@ int64_t adp_cnt_card(adp_cnt_ctx_t *ctx)
     if (!ctx) {
         return -1;
     }
-    ctx->err = CCARD_OK;
 
     if (B >= B_s) {
         return (int64_t)round((-(double)ctx->m) * log(B));
     }
 
+    ctx->err = CCARD_OK;
     return adp_cnt_card_loglog(ctx);
 }
 
@@ -240,8 +240,8 @@ int adp_cnt_merge(adp_cnt_ctx_t *ctx, adp_cnt_ctx_t *tbm, ...)
     }
 
     if (tbm) {
-        /* Cannot merge bitmap of different sizes */
-        if (tbm->m != ctx->m) {
+        /* Cannot merge bitmap of different sizes or different hash functions */
+        if ((tbm->m != ctx->m) || (tbm->hf != ctx->hf)) {
             ctx->err = CCARD_ERR_MERGE_FAILED;
             return -1;
         }
@@ -258,7 +258,7 @@ int adp_cnt_merge(adp_cnt_ctx_t *ctx, adp_cnt_ctx_t *tbm, ...)
 
         va_start(vl, tbm);
         while ((bm = va_arg(vl, adp_cnt_ctx_t *)) != NULL) {
-            if (bm->m != ctx->m) {
+            if ((tbm->m != ctx->m) || (tbm->hf != ctx->hf)) {
                 ctx->err = CCARD_ERR_MERGE_FAILED;
                 return -1;
             }

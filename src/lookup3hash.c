@@ -13,12 +13,12 @@ uint32_t lookup3(const uint32_t *k, uint32_t offset, uint32_t length, uint32_t i
         b += k[i + 1];
         c += k[i + 2];
 
-        a -= c;  a ^= (c << 4)  | (c >> -4);   c += b;
-        b -= a;  b ^= (a << 6)  | (a >> -6);   a += c;
-        c -= b;  c ^= (b << 8)  | (b >> -8);   b += a;
-        a -= c;  a ^= (c << 16) | (c >> -16);  c += b;
-        b -= a;  b ^= (a << 19) | (a >> -19);  a += c;
-        c -= b;  c ^= (b << 4)  | (b >> -4);   b += a;
+        a -= c;  a ^= (c << 4)  | (c >> (0x1f & -4));   c += b;
+        b -= a;  b ^= (a << 6)  | (a >> (0x1f & -6));   a += c;
+        c -= b;  c ^= (b << 8)  | (b >> (0x1f & -8));   b += a;
+        a -= c;  a ^= (c << 16) | (c >> (0x1f & -16));  c += b;
+        b -= a;  b ^= (a << 19) | (a >> (0x1f & -19));  a += c;
+        c -= b;  c ^= (b << 4)  | (b >> (0x1f & -4));   b += a;
 
         length -= 3;
         i += 3;
@@ -28,13 +28,13 @@ uint32_t lookup3(const uint32_t *k, uint32_t offset, uint32_t length, uint32_t i
         case 3 : c += k[i + 2];  // fall through
         case 2 : b += k[i + 1];  // fall through
         case 1 : a += k[i + 0];  // fall through
-            c ^= b; c -= (b << 14) | (b >> -14);
-            a ^= c; a -= (c << 11) | (c >> -11);
-            b ^= a; b -= (a << 25) | (a >> -25);
-            c ^= b; c -= (b << 16) | (b >> -16);
-            a ^= c; a -= (c << 4)  | (c >> -4);
-            b ^= a; b -= (a << 14) | (a >> -14);
-            c ^= b; c -= (b << 24) | (b >> -24);
+            c ^= b; c -= (b << 14) | (b >> (0x1f & -14));
+            a ^= c; a -= (c << 11) | (c >> (0x1f & -11));
+            b ^= a; b -= (a << 25) | (a >> (0x1f & -25));
+            c ^= b; c -= (b << 16) | (b >> (0x1f & -16));
+            a ^= c; a -= (c << 4)  | (c >> (0x1f & -4));
+            b ^= a; b -= (a << 14) | (a >> (0x1f & -14));
+            c ^= b; c -= (b << 24) | (b >> (0x1f & -24));
         case 0:
             break;
     }
@@ -57,15 +57,6 @@ uint32_t lookup3ycs_2(const char *s, uint32_t start, uint32_t end, uint32_t init
         if (i >= end) break;
         mixed = 0;
         char ch;
-        /* ch = s.charAt(i++);
-        a += Character.isHighSurrogate(ch) && i< end ? Character.toCodePoint(ch, s.charAt(i++)) : ch;
-        if (i>= end) break;
-        ch = s.charAt(i++);
-        b += Character.isHighSurrogate(ch) && i< end ? Character.toCodePoint(ch, s.charAt(i++)) : ch;
-        if (i>= end) break;
-        ch = s.charAt(i++);
-        c += Character.isHighSurrogate(ch) && i< end ? Character.toCodePoint(ch, s.charAt(i++)) : ch;
-        if (i>= end) break; */
         ch = s[i++];
         a += ch;
         if (i >= end) break;
@@ -76,24 +67,24 @@ uint32_t lookup3ycs_2(const char *s, uint32_t start, uint32_t end, uint32_t init
         c += ch;
         if (i >= end) break;
 
-        a -= c;  a ^= (c << 4)  | (c >> -4);   c += b;
-        b -= a;  b ^= (a << 6)  | (a >> -6);   a += c;
-        c -= b;  c ^= (b << 8)  | (b >> -8);   b += a;
-        a -= c;  a ^= (c << 16) | (c >> -16);  c += b;
-        b -= a;  b ^= (a << 19) | (a >> -19);  a += c;
-        c -= b;  c ^= (b << 4)  | (b >> -4);   b += a;
+        a -= c;  a ^= (c << 4)  | (c >> (0x1f & -4));   c += b;
+        b -= a;  b ^= (a << 6)  | (a >> (0x1f & -6));   a += c;
+        c -= b;  c ^= (b << 8)  | (b >> (0x1f & -8));   b += a;
+        a -= c;  a ^= (c << 16) | (c >> (0x1f & -16));  c += b;
+        b -= a;  b ^= (a << 19) | (a >> (0x1f & -19));  a += c;
+        c -= b;  c ^= (b << 4)  | (b >> (0x1f & -4));   b += a;
 
         mixed = 1;
     }
 
     if (mixed == 0) {
-        c ^= b; c -= (b <<14) | (b >> -14);
-        a ^= c; a -= (c <<11) | (c >> -11);
-        b ^= a; b -= (a <<25) | (a >> -25);
-        c ^= b; c -= (b <<16) | (b >> -16);
-        a ^= c; a -= (c <<4)  | (c >> -4);
-        b ^= a; b -= (a <<14) | (a >> -14);
-        c ^= b; c -= (b <<24) | (b >> -24);
+        c ^= b; c -= (b <<14) | (b >> (0x1f & -14));
+        a ^= c; a -= (c <<11) | (c >> (0x1f & -11));
+        b ^= a; b -= (a <<25) | (a >> (0x1f & -25));
+        c ^= b; c -= (b <<16) | (b >> (0x1f & -16));
+        a ^= c; a -= (c <<4)  | (c >> (0x1f & -4));
+        b ^= a; b -= (a <<14) | (a >> (0x1f & -14));
+        c ^= b; c -= (b <<24) | (b >> (0x1f & -24));
     }
 
     return c;
@@ -111,15 +102,6 @@ uint64_t lookup3ycs64(const char *s, uint32_t start, uint32_t end, uint64_t init
         if (i >= end) break;
         mixed = 0;
         char ch;
-        /* ch = s.charAt(i++);
-        a += Character.isHighSurrogate(ch) && i< end ? Character.toCodePoint(ch, s.charAt(i++)) : ch;
-        if (i>= end) break;
-        ch = s.charAt(i++);
-        b += Character.isHighSurrogate(ch) && i< end ? Character.toCodePoint(ch, s.charAt(i++)) : ch;
-        if (i>= end) break;
-        ch = s.charAt(i++);
-        c += Character.isHighSurrogate(ch) && i< end ? Character.toCodePoint(ch, s.charAt(i++)) : ch;
-        if (i>= end) break; */
         ch = s[i++];
         a += ch;
         if (i >= end) break;
@@ -130,24 +112,24 @@ uint64_t lookup3ycs64(const char *s, uint32_t start, uint32_t end, uint64_t init
         c += ch;
         if (i >= end) break;
 
-        a -= c;  a ^= ( c << 4)  | (c >> -4);   c += b;
-        b -= a;  b ^= ( a << 6)  | (a >> -6);   a += c;
-        c -= b;  c ^= ( b << 8)  | (b >> -8);   b += a;
-        a -= c;  a ^= ( c << 16) | (c >> -16);  c += b;
-        b -= a;  b ^= ( a << 19) | (a >> -19);  a += c;
-        c -= b;  c ^= ( b << 4)  | (b >> -4);   b += a;
+        a -= c;  a ^= ( c << 4)  | (c >> (0x1f & -4));   c += b;
+        b -= a;  b ^= ( a << 6)  | (a >> (0x1f & -6));   a += c;
+        c -= b;  c ^= ( b << 8)  | (b >> (0x1f & -8));   b += a;
+        a -= c;  a ^= ( c << 16) | (c >> (0x1f & -16));  c += b;
+        b -= a;  b ^= ( a << 19) | (a >> (0x1f & -19));  a += c;
+        c -= b;  c ^= ( b << 4)  | (b >> (0x1f & -4));   b += a;
 
         mixed = 1;
     }
 
     if (mixed == 0) {
-        c ^= b; c -= (b << 14) | (b >> -14);
-        a ^= c; a -= (c << 11) | (c >> -11);
-        b ^= a; b -= (a << 25) | (a >> -25);
-        c ^= b; c -= (b << 16) | (b >> -16);
-        a ^= c; a -= (c << 4)  | (c >> -4);
-        b ^= a; b -= (a << 14) | (a >> -14);
-        c ^= b; c -= (b << 24) | (b >> -24);
+        c ^= b; c -= (b << 14) | (b >> (0x1f & -14));
+        a ^= c; a -= (c << 11) | (c >> (0x1f & -11));
+        b ^= a; b -= (a << 25) | (a >> (0x1f & -25));
+        c ^= b; c -= (b << 16) | (b >> (0x1f & -16));
+        a ^= c; a -= (c << 4)  | (c >> (0x1f & -4));
+        b ^= a; b -= (a << 14) | (a >> (0x1f & -14));
+        c ^= b; c -= (b << 24) | (b >> (0x1f & -24));
     }
 
     return c + ((uint64_t)b << 32);
