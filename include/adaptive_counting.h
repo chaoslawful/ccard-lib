@@ -18,6 +18,7 @@ extern "C" {
      * @param[in] buf Pointer to the serialized bitmap. NULL if there's none.
      * @param[in] len_or_k The length of the bitmap if buf is not NULL;
      * otherwise it's the base-2 logarithm of the bitmap length.
+     * @param[in] hf Hash function that be applied to elements.
      *
      * @retval not-NULL An initialized context to be used with the rest of
      * methods.
@@ -25,7 +26,7 @@ extern "C" {
      *
      * @see adp_cnt_fini
      * */
-    adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k);
+    adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf);
 
     /**
      * Retrieve the cardinality calculated from bitmap in the context using LogLog Counting.

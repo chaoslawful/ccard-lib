@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <math.h>
+#include "murmurhash.h"
 #include "lookup3hash.h"
 #include "adaptive_counting.h"
 
@@ -13,6 +14,7 @@ struct adp_cnt_ctx_s {
     double Ca;
     uint32_t Rsum;
     uint32_t b_e;
+    uint8_t hf;
     uint8_t M[1];
 };
 
@@ -76,7 +78,7 @@ static uint8_t num_of_trail_zeros(uint64_t i)
     return n - (uint8_t)((i << 1) >> 63);
 }
 
-adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k)
+adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
 {
     adp_cnt_ctx_t *ctx;
     uint8_t *buf = (uint8_t*)obuf;
@@ -103,6 +105,7 @@ adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k)
         ctx->k = k;
         ctx->Ca = alpha[k];
         ctx->Rsum = 0;
+        ctx->hf = hf;
         ctx->b_e = ctx->m;
         for(i = 0; i < len_or_k; ++i) {
             ctx->Rsum += buf[i];
@@ -123,6 +126,7 @@ adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k)
         ctx->k = (uint8_t)len_or_k;
         ctx->Ca = alpha[len_or_k];
         ctx->Rsum = 0;
+        ctx->hf = hf;
         ctx->b_e = ctx->m;
         memset(ctx->M, 0, ctx->m);
     }
@@ -163,16 +167,29 @@ int adp_cnt_offer(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len)
 {
     int modified = 0;
     uint64_t x, j;
-    uint8_t r;
+    uint8_t r, hl;
 
     if (!ctx) {
         return -1;
     }
 
-    ctx->err = CCARD_OK;
-    x = lookup3ycs64_2((const char *)buf);
-    j = x >> (64 - ctx->k);
-    r = (uint8_t)(num_of_trail_zeros(x << ctx->k) - ctx->k + 1);
+    switch (ctx->hf) {
+        case CCARD_HASH_MURMUR:
+            x = (uint64_t)murmurhash((void *)buf, len, -1);
+            hl = 32;
+            break;
+        case CCARD_HASH_LOOKUP3:
+            x = lookup3ycs64_2((const char *)buf);
+            hl = 64;
+            break;
+        default:
+            /* default to use lookup3 hash function */
+            x = lookup3ycs64_2((const char *)buf);
+            hl = 64;
+    }
+
+    j = x >> (hl - ctx->k);
+    r = (uint8_t)(num_of_trail_zeros(x << (ctx->k + 64 - hl)) - (ctx->k + 64 - hl) + 1);
     if (ctx->M[j] < r) {
         ctx->Rsum += r - ctx->M[j];
         if (ctx->M[j] == 0) {
@@ -183,29 +200,31 @@ int adp_cnt_offer(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len)
         modified = 1;
     }
 
+    ctx->err = CCARD_OK;
     return modified;
 }
 
 int adp_cnt_get_bytes(adp_cnt_ctx_t *ctx, void *buf, uint32_t *len)
 {
     /*
-     +--------------+------------------------------+-----------+
-     | algorithm[1] | bitmap length(base-2 log)[1] | bitmap[n] |
-     +--------------+------------------------------+-----------+
+     +--------------+----------------------------------------+-----------+
+     | algorithm[1] | hash[1] | bitmap length(base-2 log)[1] | bitmap[n] |
+     +--------------+----------------------------------------+-----------+
      */
     uint8_t algo = CCARD_ALGO_ADAPTIVE;
     uint8_t *out = (uint8_t *)buf;
 
-    if (!ctx || (*len < ctx->m + 2)) {
+    if (!ctx || (*len < ctx->m + 3)) {
         return -1;
     }
 
     if (buf) {
         out[0] = algo;
-        out[1] = ctx->k;
-        memcpy(&out[2], ctx->M, ctx->m);
+        out[1] = ctx->hf;
+        out[2] = ctx->k;
+        memcpy(&out[3], ctx->M, ctx->m);
     }
-    *len = ctx->m + 2;
+    *len = ctx->m + 3;
 
     return 0;
 }
@@ -270,13 +289,17 @@ int adp_cnt_merge_bytes(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
 
     if (buf) {
         in = (uint8_t *)buf;
-        /* Cannot merge bitmap of different sizes or different algorithms */
-        if ((ctx->m + 2 != len) || (in[0] != CCARD_ALGO_ADAPTIVE)) {
+        /* Cannot merge bitmap of different sizes, 
+        different hash functions or different algorithms */
+        if ((ctx->m + 3 != len) || 
+            (in[0] != CCARD_ALGO_ADAPTIVE) || 
+            (in[1] != ctx->hf)) {
+
             ctx->err = CCARD_ERR_MERGE_FAILED;
             return -1;
         }
 
-        bctx = adp_cnt_init(&in[2], ctx->m);
+        bctx = adp_cnt_init(&in[3], ctx->m, ctx->hf);
         adp_cnt_merge(ctx, bctx, NULL);
         adp_cnt_fini(bctx);
 
@@ -284,12 +307,15 @@ int adp_cnt_merge_bytes(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
         while ((in = (uint8_t *)va_arg(vl, const void *)) != NULL) {
             len = va_arg(vl, uint32_t);
 
-            if ((ctx->m + 2 != len) || (in[0] != CCARD_ALGO_ADAPTIVE)) {
+            if ((ctx->m + 3 != len) || 
+                (in[0] != CCARD_ALGO_ADAPTIVE) || 
+                (in[1] != ctx->hf)) {
+
                 ctx->err = CCARD_ERR_MERGE_FAILED;
                 return -1;
             }
 
-            bctx = adp_cnt_init(&in[2], ctx->m);
+            bctx = adp_cnt_init(&in[3], ctx->m, ctx->hf);
             adp_cnt_merge(ctx, bctx, NULL);
             adp_cnt_fini(bctx);
         }

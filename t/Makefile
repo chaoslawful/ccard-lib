@@ -99,6 +99,6 @@ adaptive_counting_unittest.o : $(USER_DIR)/src/adaptive_counting.c \
 	$(USER_DIR)/include/adaptive_counting.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/t/adaptive_counting_unittest.c
 
-adaptive_counting_unittest : lookup3hash.o \
+adaptive_counting_unittest : murmurhash.o lookup3hash.o \
 	adaptive_counting.o adaptive_counting_unittest.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@

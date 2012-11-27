@@ -13,33 +13,63 @@
  * */
 TEST(AdaptiveCounting, Counting) {
     int64_t i, esti;
-    adp_cnt_ctx_t *ctx = adp_cnt_init(NULL, 16);
+    adp_cnt_ctx_t *ctx1 = adp_cnt_init(NULL, 16, CCARD_HASH_LOOKUP3);
+    adp_cnt_ctx_t *ctx2 = adp_cnt_init(NULL, 16, CCARD_HASH_MURMUR);
 
-    printf("Adaptive Counting:\n");
+    printf("Adaptive Counting with Lookup3hash:\n");
     for (i = 1; i <= 500000L; i++) {
-        adp_cnt_offer(ctx, &i, sizeof(int64_t));
+        adp_cnt_offer(ctx1, &i, sizeof(int64_t));
 
         if (i % 50000 == 0) {
-            esti = adp_cnt_card(ctx);
+            esti = adp_cnt_card(ctx1);
             printf("actual: %llu, estimated: %llu, error: %.2f%%\n", 
                     i, esti, fabs((double)(esti - i) / i * 100));
         }
     }
+    printf("\n");
 
-    adp_cnt_reset(ctx);
+    adp_cnt_reset(ctx1);
 
-    printf("Loglog Counting:\n");
+    printf("Loglog Counting with Lookup3hash:\n");
     for (i = 1; i <= 500000L; i++) {
-        adp_cnt_offer(ctx, &i, sizeof(int64_t));
+        adp_cnt_offer(ctx1, &i, sizeof(int64_t));
 
         if (i % 50000 == 0) {
-            esti = adp_cnt_card_loglog(ctx);
+            esti = adp_cnt_card_loglog(ctx1);
             printf("actual: %llu, estimated: %llu, error: %.2f%%\n", 
                     i, esti, fabs((double)(esti - i) / i * 100));
         }
     }
+    printf("\n");
 
-    adp_cnt_fini(ctx);
+    printf("Adaptive Counting with Murmurhash:\n");
+    for (i = 1; i <= 500000L; i++) {
+        adp_cnt_offer(ctx2, &i, sizeof(int64_t));
+
+        if (i % 50000 == 0) {
+            esti = adp_cnt_card(ctx2);
+            printf("actual: %llu, estimated: %llu, error: %.2f%%\n", 
+                    i, esti, fabs((double)(esti - i) / i * 100));
+        }
+    }
+    printf("\n");
+
+    adp_cnt_reset(ctx2);
+
+    printf("Loglog Counting with Murmurhash:\n");
+    for (i = 1; i <= 500000L; i++) {
+        adp_cnt_offer(ctx2, &i, sizeof(int64_t));
+
+        if (i % 50000 == 0) {
+            esti = adp_cnt_card_loglog(ctx2);
+            printf("actual: %llu, estimated: %llu, error: %.2f%%\n", 
+                    i, esti, fabs((double)(esti - i) / i * 100));
+        }
+    }
+    printf("\n");
+
+    adp_cnt_fini(ctx2);
+    adp_cnt_fini(ctx1);
 }
 
 /**
@@ -54,12 +84,12 @@ TEST(AdaptiveCounting, Counting) {
  * */
 TEST(AdaptiveCounting, Merge) {
     int64_t i, esti;
-    adp_cnt_ctx_t *ctx = adp_cnt_init(NULL, 16);
-    adp_cnt_ctx_t *tbm1 = adp_cnt_init(NULL, 16);
-    adp_cnt_ctx_t *tbm2 = adp_cnt_init(NULL, 16);
+    adp_cnt_ctx_t *ctx = adp_cnt_init(NULL, 16, CCARD_HASH_LOOKUP3);
+    adp_cnt_ctx_t *tbm1 = adp_cnt_init(NULL, 16, CCARD_HASH_LOOKUP3);
+    adp_cnt_ctx_t *tbm2 = adp_cnt_init(NULL, 16, CCARD_HASH_LOOKUP3);
     int32_t m = pow(2, 16);
-    uint8_t buf1[m + 2], buf2[m + 2];
-    uint32_t len1 = m + 2, len2 = m + 2;
+    uint8_t buf1[m + 3], buf2[m + 3];
+    uint32_t len1 = m + 3, len2 = m + 3;
 
     for (i = 1; i <= 20000L; i++) {
         adp_cnt_offer(ctx, &i, sizeof(uint64_t));

@@ -28,11 +28,21 @@ extern "C" {
     };
 
     /**
+     * Hash functions
+     * */
+    enum
+    {
+        CCARD_HASH_MURMUR  = 1,
+        CCARD_HASH_LOOKUP3 = 2,
+        CCARD_HASH_PLACEHOLDER
+    };
+
+    /**
      * C-card algorithm definition
      * */
     typedef struct ccard_algo_s {
         /// Allocate algorithm ctx with optional external data
-        void*   (*init)(const void* buf, uint32_t len_or_hint);
+        void*   (*init)(const void* buf, uint32_t len_or_hint, uint8_t hf);
         /// Get cardinality from algorithm ctx
         int64_t (*card)(void* ctx);
         /// Offer a new item to be counted
