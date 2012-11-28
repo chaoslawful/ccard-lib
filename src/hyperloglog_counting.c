@@ -62,12 +62,12 @@ hll_cnt_ctx_t* hll_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
             return NULL;
         }
 
-        ctx = (hll_cnt_ctx_t *)malloc(sizeof(hll_cnt_ctx_t) + len_or_k - 1);
-        memcpy(ctx->M, &buf[3], len_or_k);
+        ctx = (hll_cnt_ctx_t *)malloc(sizeof(hll_cnt_ctx_t) + m - 1);
+        memcpy(ctx->M, &buf[3], m);
     } else {
         // k was given
-        ctx = (hll_cnt_ctx_t *)malloc(sizeof(hll_cnt_ctx_t) + (1 << len_or_k) - 1);
-        memset(ctx->M, 0, ctx->m);
+        ctx = (hll_cnt_ctx_t *)malloc(sizeof(hll_cnt_ctx_t) + m - 1);
+        memset(ctx->M, 0, m);
     }
     ctx->err = CCARD_OK;
     ctx->log2m = log2m;
