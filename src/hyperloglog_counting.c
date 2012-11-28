@@ -16,7 +16,7 @@ struct hll_cnt_ctx_s {
     uint8_t M[1];
 };
 
-static const double POW_2_32 = pow(2, 32);
+static const double POW_2_32 = 4294967296.0;
 static const double NEGATIVE_POW_2_32 = -4294967296.0;
 
 static uint8_t num_of_trail_zeros(uint64_t i)
@@ -116,7 +116,8 @@ int64_t hll_cnt_card(hll_cnt_ctx_t *ctx)
         return (int64_t)round(ctx->m * log(ctx->m / zeros));
     } else if (estimate <= (1.0 / 30.0) * POW_2_32) {
         return (int64_t)round(estimate);
-    } else if (estimate > (1.0 / 30.0) * POW_2_32) {
+    /* } else if (estimate > (1.0 / 30.0) * POW_2_32) { */
+    } else {
         return (int64_t)round((NEGATIVE_POW_2_32 * log(1.0 - (estimate / POW_2_32))));
     }
 }
