@@ -24,6 +24,7 @@ extern "C" {
     enum
     {
         CCARD_ALGO_ADAPTIVE = 1,
+        CCARD_ALGO_HYPERLOGLOG = 2,
         CCARD_ALGO_PLACEHOLDER
     };
 

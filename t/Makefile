@@ -31,7 +31,8 @@ CXXFLAGS += -g -Wall -Wextra
 TESTS = murmurhash_unittest \
 		lookup3hash_unittest \
 		register_set_unittest \
-		adaptive_counting_unittest
+		adaptive_counting_unittest \
+		hyperloglog_counting_unittest
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -113,4 +114,16 @@ adaptive_counting_unittest.o : $(USER_DIR)/src/adaptive_counting.c \
 
 adaptive_counting_unittest : murmurhash.o lookup3hash.o \
 	adaptive_counting.o adaptive_counting_unittest.o gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+hyperloglog_counting.o : $(USER_DIR)/src/hyperloglog_counting.c \
+	$(USER_DIR)/include/hyperloglog_counting.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/src/hyperloglog_counting.c
+
+hyperloglog_counting_unittest.o : $(USER_DIR)/src/hyperloglog_counting.c \
+	$(USER_DIR)/include/hyperloglog_counting.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/t/hyperloglog_counting_unittest.c
+
+hyperloglog_counting_unittest : murmurhash.o lookup3hash.o \
+	hyperloglog_counting.o hyperloglog_counting_unittest.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@

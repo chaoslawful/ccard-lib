@@ -7,7 +7,11 @@
 extern "C" {
 #endif
 
-    typedef struct reg_set_s reg_set_t;
+    typedef struct reg_set_s {
+        uint32_t count;
+        uint32_t size;
+        uint32_t M[1];
+    } reg_set_t;
 
     /**
      * Initialize a new register set.

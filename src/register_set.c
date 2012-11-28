@@ -5,12 +5,6 @@
 #include <math.h>
 #include "register_set.h"
 
-struct reg_set_s {
-    uint32_t count;
-    uint32_t size;
-    uint32_t M[1];
-};
-
 static const uint32_t LOG2_BITS_PER_WORD = 6;
 
 static const uint32_t REGISTER_SIZE = 5;
