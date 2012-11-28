@@ -15,9 +15,9 @@ extern "C" {
     /**
      * Initialize adaptive counting context with optional serialized bitmap.
      *
-     * @param[in] buf Pointer to the serialized bitmap. NULL if there's none.
+     * @param[in] buf Pointer to the serialized bitmap (with 3 bytes header). NULL if there's none.
      * @param[in] len_or_k The length of the bitmap if buf is not NULL;
-     * otherwise it's the base-2 logarithm of the bitmap length.
+     * otherwise it's the base-2 logarithm of the bitmap length (exclude 3 bytes header).
      * @param[in] hf Hash function that be applied to elements.
      *
      * @retval not-NULL An initialized context to be used with the rest of

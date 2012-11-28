@@ -93,6 +93,14 @@ adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
         uint32_t i;
         uint8_t k = num_of_trail_zeros(len_or_k);
 
+        if (buf[0] != CCARD_ALGO_ADAPTIVE || 
+            buf[1] != hf ||
+            buf[2] != k) {
+
+            // counting algorithm, hash function or length not match
+            return NULL;
+        }
+
         if (len_or_k != (uint32_t)(1 << k)) {
             // invalid buffer size, its length must be a power of 2
             return NULL;
@@ -100,14 +108,15 @@ adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
 
         ctx = (adp_cnt_ctx_t *)malloc(sizeof(adp_cnt_ctx_t) + len_or_k - 1);
         ctx->err = CCARD_OK;
-        memcpy(ctx->M, buf, len_or_k);
+        // bitmap has 3 bytes header
+        memcpy(ctx->M, &buf[3], len_or_k);
         ctx->m = len_or_k;
         ctx->k = k;
         ctx->Ca = alpha[k];
         ctx->Rsum = 0;
         ctx->hf = hf;
         ctx->b_e = ctx->m;
-        for(i = 0; i < len_or_k; ++i) {
+        for(i = 3; i < len_or_k + 3; ++i) {
             ctx->Rsum += buf[i];
             if (buf[i] > 0) {
                 ctx->b_e--;
@@ -299,7 +308,7 @@ int adp_cnt_merge_bytes(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
             return -1;
         }
 
-        bctx = adp_cnt_init(&in[3], ctx->m, ctx->hf);
+        bctx = adp_cnt_init(in, ctx->m, ctx->hf);
         adp_cnt_merge(ctx, bctx, NULL);
         adp_cnt_fini(bctx);
 
@@ -315,7 +324,7 @@ int adp_cnt_merge_bytes(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
                 return -1;
             }
 
-            bctx = adp_cnt_init(&in[3], ctx->m, ctx->hf);
+            bctx = adp_cnt_init(in, ctx->m, ctx->hf);
             adp_cnt_merge(ctx, bctx, NULL);
             adp_cnt_fini(bctx);
         }
