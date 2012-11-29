@@ -7,7 +7,7 @@ which it is infeasible to store all events in memory.
 
 This library implements a series of cardinality estimate algorithms 
 such as Linear Counting, LogLog Counting, HyperLogLog Counting and Adaptive Counting.
-For more information of this algorithms please read the [Reference](#Reference) section.
+For more information of this algorithms please read the [Reference](#reference) section.
 
 ## Building
 
