@@ -19,7 +19,7 @@ TEST(RegisterSetTest, GetAndSet) {
     for (i = 0; i < 1023; i++) {
         if (i % 100 == 0) {
             rs_get(rs, i, &value);
-            EXPECT_EQ(i % 32, value);
+            EXPECT_EQ((uint32_t)(i % 32), value);
         }
     }
 

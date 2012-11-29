@@ -9,9 +9,9 @@
  * </p>
  * */
 TEST(Lookup3hashTest, StringHashToLong) {
-    char *s = "hello world";
+    const char *s = "hello world";
 
-    EXPECT_EQ(4141157809988715033, lookup3ycs64_2(s));
+    EXPECT_EQ(4141157809988715033lu, lookup3ycs64_2(s));
 }
 
 // vi:ft=c ts=4 sw=4 fdm=marker et

@@ -9,9 +9,9 @@
  * </p>
  * */
 TEST(MurmurhashTest, Buffer) {
-    char *s = "hello world";
+    char *s = (char *)"hello world";
 
-    EXPECT_EQ(1964480955, murmurhash(s, strlen(s), -1));
+    EXPECT_EQ(1964480955lu, murmurhash((void *)s, strlen(s), -1));
 }
 
 /**
@@ -24,7 +24,7 @@ TEST(MurmurhashTest, Buffer) {
 TEST(MurmurhashTest, Long) {
     uint64_t longint = 123456;
 
-    EXPECT_EQ(148129653, murmurhash_long(longint));
+    EXPECT_EQ(148129653lu, murmurhash_long(longint));
 }
 
 // vi:ft=c ts=4 sw=4 fdm=marker et

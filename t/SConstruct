@@ -1,0 +1,12 @@
+env = Environment(
+        CPPPATH = ['../include', '/usr/local/gtest', '/usr/local/gtest/include'],
+        LIBPATH = ['/usr/lib', '/usr/local/lib'], 
+        CCFLAGS = ['-Wall', '-Wextra', '-Werror', '-g3'])
+
+env.Program('unittest', [
+        Glob('./*.cc'), 
+        Glob('../src/*.c'), 
+        '/usr/local/gtest/src/gtest-all.cc', 
+        '/usr/local/gtest/src/gtest_main.cc'])
+
+# vi:ft=python ts=4 sw=4 et fdm=marker
