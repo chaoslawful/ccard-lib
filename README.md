@@ -20,7 +20,8 @@ All will be done.
 
 ## Examples
 
-(INCOMPLETE)
+Please see test cases in [t/](https://github.com/chaoslawful/ccard-lib/tree/master/t) 
+to know how to use ccard-lib. 
 
 ## Reference
 
@@ -50,7 +51,7 @@ The implemention refers [stream-lib](https://raw.github.com/clearspring/stream-l
 
 ## Experiment
 
-When using 2^16 (64k) bitmap, estimate result is below (from test suite):
+When using 2^16 (64k) bitmap, estimate result as follow:
 
 	Linear Counting with Murmurhash:
 	actual: 50000, estimated: 50062, error: 0.12%
