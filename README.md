@@ -1,5 +1,3 @@
-# ccard-lib
-
 ## Description
 
 A C library for estimating cardinality in streams for 
