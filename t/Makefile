@@ -32,7 +32,8 @@ TESTS = murmurhash_unittest \
 		lookup3hash_unittest \
 		register_set_unittest \
 		adaptive_counting_unittest \
-		hyperloglog_counting_unittest
+		hyperloglog_counting_unittest \
+		linear_counting_unittest
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -126,4 +127,16 @@ hyperloglog_counting_unittest.o : $(USER_DIR)/src/hyperloglog_counting.c \
 
 hyperloglog_counting_unittest : murmurhash.o lookup3hash.o \
 	hyperloglog_counting.o hyperloglog_counting_unittest.o gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+linear_counting.o : $(USER_DIR)/src/linear_counting.c \
+	$(USER_DIR)/include/linear_counting.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/src/linear_counting.c
+
+linear_counting_unittest.o : $(USER_DIR)/src/linear_counting.c \
+	$(USER_DIR)/include/linear_counting.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/t/linear_counting_unittest.c
+
+linear_counting_unittest : murmurhash.o lookup3hash.o \
+	linear_counting.o linear_counting_unittest.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
