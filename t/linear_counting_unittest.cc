@@ -22,7 +22,7 @@ TEST(LinearCounting, Counting) {
 
         if (i % 50000 == 0) {
             esti = lnr_cnt_card(ctx1);
-            printf("actual: %llu, estimated: %llu, error: %.2f%%\n", 
+            printf("actual: %lu, estimated: %lu, error: %.2f%%\n", 
                     i, esti, fabs((double)(esti - i) / i * 100));
         }
     }
@@ -36,7 +36,7 @@ TEST(LinearCounting, Counting) {
 
         if (i % 50000 == 0) {
             esti = lnr_cnt_card(ctx2);
-            printf("actual: %llu, estimated: %llu, error: %.2f%%\n", 
+            printf("actual: %lu, estimated: %lu, error: %.2f%%\n", 
                     i, esti, fabs((double)(esti - i) / i * 100));
         }
     }
@@ -81,7 +81,7 @@ TEST(LinearCounting, Merge) {
 
     lnr_cnt_merge_bytes(ctx, buf1, len1, buf2, len2, NULL);
     esti = lnr_cnt_card(ctx);
-    printf("actual:40000, estimated: %llu, error: %.2f%%\n", 
+    printf("actual:40000, estimated: %lu, error: %.2f%%\n", 
             esti, fabs((double)(esti - 40000) / 40000 * 100));
 
     lnr_cnt_fini(tbm2);
