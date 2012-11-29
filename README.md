@@ -9,7 +9,14 @@ For more information about this algorithms please read the [Reference](#referenc
 
 ## Building
 
-(INCOMPLETE)
+Building ccard-lib needs the [scons](http://www.scons.org/). Please read document 
+at [scons homepage](http://www.scons.org/) for more information about it.
+
+Assuming you have scons installed, just build ccard-lib like this:
+
+    scons
+
+All will be done.
 
 ## Examples
 
