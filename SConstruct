@@ -29,4 +29,31 @@ env.Command(libdir+dlname, libdir+str(dl[0]), SymLink)
 # make 'install' the alias of library directory target
 env.Alias('install', libdir)
 
+#############################################################
+# swig for php make and install
+swigEnv = Environment(SWIGFLAGS=['-php'],
+        SHLIBPREFIX="")
+
+import commands
+# php inlcudes
+phpconfig = commands.getoutput("php-config --includes")
+swigSl = swigEnv.SharedLibrary('php_ccard.so', ['ext/php_ccard.i'],  LIBS=['ccard-lib'],
+        CCFLAGS = ["-I./include", phpconfig.split()])
+
+def silentRemoveFile(file):
+    try:
+        os.remove(file);
+    except:
+        pass
+
+# Remove useless files during clean
+if swigEnv.GetOption('clean'):
+    topdir = env.Dir("#").abspath
+    silentRemoveFile(os.path.join(topdir, "ext/ccard.php"));
+    silentRemoveFile(os.path.join(topdir, "ext/php_ccard.h"));
+
+phpLibExtDir = "/usr/lib64/php/modules/"
+swigEnv.Install(phpLibExtDir, [swigSl])
+swigEnv.Alias('install-php', phpLibExtDir)
+
 # vi:ft=python ts=4 sw=4 et fdm=marker
