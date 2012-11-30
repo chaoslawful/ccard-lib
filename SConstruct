@@ -9,7 +9,7 @@ libdir = '/usr/local/lib/'
 
 env = Environment(
         #CC = "clang",
-        CCFLAGS = ["-Wall", "-Wextra", "-Werror", "-g3", "-Iinclude/"],
+        CCFLAGS = ["-Wall", "-Wextra", "-Werror", "-g3", "-Iinclude/", "-std=c99"],
         )
 
 srcs = Glob("src/*.c")

@@ -2,7 +2,7 @@ env = Environment(
         LIBS = ['pthread'],
         CPPPATH = ['../include', '/usr/local/gtest', '/usr/local/gtest/include'],
         LIBPATH = ['/usr/lib64', '/usr/local/lib64'], 
-        CCFLAGS = ['-Wall', '-Wextra', '-Werror', '-g3'])
+        CCFLAGS = ['-Wall', '-Wextra', '-Werror', '-g3', "-std=c99"])
 
 env.Program('unittest', [
         Glob('./*.cc'), 
