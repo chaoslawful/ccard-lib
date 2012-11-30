@@ -12,11 +12,27 @@ For more information about this algorithms please read the [Reference](#referenc
 Building ccard-lib needs the [scons](http://www.scons.org/). Please read document 
 at [scons homepage](http://www.scons.org/) for more information about it.
 
+### Building as Library
+
 Assuming you have scons installed, just build ccard-lib like this:
 
-    scons
+    scons install
 
-All will be done.
+Scons will build and install ccard-lib to your system.
+
+Default the ccard-lib will be installed at "/usr/local/lib", if you want to change the 
+install directory please replace the "libdir" that in SConsturc file by your target 
+directory.
+
+### Building as PHP Extension
+
+The follow command will build ccard-lib as php extension:
+
+	scons install-php
+
+We use [swig](http://www.swig.org) to generate php extension, please install it 
+before run this command. What is more, you should change the "phpLibExtDir" in 
+SConstruct to your php ext module directory.
 
 ## Examples
 
