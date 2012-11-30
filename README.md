@@ -34,6 +34,13 @@ We use [swig](http://www.swig.org) to generate php extension, please install it
 before run this command. What is more, you should change the "phpLibExtDir" in 
 SConstruct to your php ext module directory.
 
+### Uninstall
+
+If you want to uninstall ccard-lib from your system, use this commands:
+
+	scons -c install-php
+	scons -c install
+
 ## Examples
 
 Please see test cases in [t/](https://github.com/chaoslawful/ccard-lib/tree/master/t) 
