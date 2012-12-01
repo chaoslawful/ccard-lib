@@ -9,8 +9,7 @@ libdir = '/usr/local/lib/'
 
 env = Environment(
         #CC = "clang",
-        CCFLAGS = ["-Wall", "-Wextra", "-Werror", "-g3", "-Iinclude/", "-std=c99"],
-        )
+        CCFLAGS = ["-Wall", "-Wextra", "-Werror", "-g3", "-Iinclude/", "-std=c99"])
 
 srcs = Glob("src/*.c")
 libname = name + '.' + ver
@@ -53,9 +52,9 @@ def silentRemoveFile(file):
 
 # Remove useless files during clean
 if swigEnv.GetOption('clean'):
-    topdir = env.Dir("#").abspath
-    silentRemoveFile(os.path.join(topdir, "ext/ccard.php"));
-    silentRemoveFile(os.path.join(topdir, "ext/php_ccard.h"));
+        topdir = env.Dir("#").abspath
+        silentRemoveFile(os.path.join(topdir, "ext/ccard.php"));
+        silentRemoveFile(os.path.join(topdir, "ext/php_ccard.h"));
 
 swigEnv.Install(phpLibExtDir, [swigSl])
 swigEnv.Alias('install-php', phpLibExtDir)
