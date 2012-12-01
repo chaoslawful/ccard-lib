@@ -31,8 +31,7 @@ The follow command will build ccard-lib as php extension:
 	scons install-php
 
 We use [swig](http://www.swig.org) to generate php extension, please install it 
-before run this command. What is more, you should change the "phpLibExtDir" in 
-SConstruct to your php ext module directory.
+before run this command. 
 
 ### Uninstall
 
