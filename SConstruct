@@ -34,30 +34,19 @@ swigEnv = Environment(SWIGFLAGS=['-php'],
         SHLIBPREFIX="")
 
 import commands
-# php inlcudes
-phpconfig = commands.getoutput("php-config --includes")
+swigEnv.ParseConfig("php-config --includes")
 phpLibExtDir = commands.getoutput("php-config --extension-dir")
 
 swigSl = swigEnv.SharedLibrary(
-        'php_card.so', 
-        ['ext/php_ccard.i'],  
+        'php_card.so',
+        ['ext/php_ccard.i'],
         LIBS=['ccard-lib'],
-        CCFLAGS = ["-I./include", phpconfig.split()])
+        CCFLAGS = ["-Iinclude"])
 
-def silentRemoveFile(file):
-    try:
-        os.remove(file);
-    except:
-        pass
 
-# Remove useless files during clean
-if swigEnv.GetOption('clean'):
-        topdir = env.Dir("#").abspath
-        silentRemoveFile(os.path.join(topdir, "ext/ccard.php"));
-        silentRemoveFile(os.path.join(topdir, "ext/php_ccard.h"));
-
-swigEnv.Install(phpLibExtDir, [swigSl])
+file2 = swigEnv.Install(phpLibExtDir, [swigSl])
 swigEnv.Alias('install-php', phpLibExtDir)
+swigEnv.Clean(swigSl, ["ext/ccard.php", "ext/php_ccard.h"])
 
 # vi:ft=python ts=4 sw=4 et fdm=marker
 
