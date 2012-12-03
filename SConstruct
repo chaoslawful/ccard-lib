@@ -44,7 +44,7 @@ swigSl = swigEnv.SharedLibrary(
         CCFLAGS = ["-Iinclude"])
 
 
-file2 = swigEnv.Install(phpLibExtDir, [swigSl])
+swigEnv.Install(phpLibExtDir, [swigSl])
 swigEnv.Alias('install-php', phpLibExtDir)
 swigEnv.Clean(swigSl, ["ext/ccard.php", "ext/php_ccard.h"])
 
