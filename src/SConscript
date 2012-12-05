@@ -17,10 +17,13 @@ libname = name + '.' + ver
 slname = env.subst('$LIBPREFIX') + name + env.subst('$LIBSUFFIX')
 dlname = env.subst('$SHLIBPREFIX') + name + env.subst('$SHLIBSUFFIX')
 
-sl = env.StaticLibrary("../" + libname, srcs)
-dl = env.SharedLibrary("../" + libname, srcs)
+sl = env.StaticLibrary(libname, srcs)
+dl = env.SharedLibrary(libname, srcs)
 
-env.Install(libdir, [sl, dl])
+sl_new = env.Command("../" + str(sl[0]), sl, Move("$TARGET", "$SOURCE"))
+dl_new = env.Command("../" + str(dl[0]), dl, Move("$TARGET", "$SOURCE"))
+
+env.Install(libdir, [sl_new, dl_new])
 
 # make version-less link to static and shared libraries
 env.Command(libdir+slname, libdir+str(sl[0]), SymLink)
