@@ -1,0 +1,20 @@
+# swig for php make and install
+env = Environment(SWIGFLAGS=['-php'],
+        SHLIBPREFIX="")
+
+import commands
+env.ParseConfig("php-config --includes")
+phpLibExtDir = commands.getoutput("php-config --extension-dir")
+
+swigSl = env.SharedLibrary(
+        '../php_card.so',
+        ['php_ccard.i'],
+        LIBS=['ccard-lib'],
+        CCFLAGS = ["-Iinclude"])
+
+phpLib = env.Install(phpLibExtDir, [swigSl])
+env.Alias('install-php', phpLib)
+env.Clean(swigSl, ["ccard.php", "php_ccard.h"])
+
+# vi:ft=python ts=4 sw=4 et fdm=marker
+
