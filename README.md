@@ -54,6 +54,13 @@ If you want to uninstall ccard-lib from your system, use this commands:
 Please see test cases in [t/](https://github.com/chaoslawful/ccard-lib/tree/master/t) 
 to know how to use ccard-lib. 
 
+## For Developers
+
+Source codes should always be formatted before committing by running script
+`util/indent-src` in top-dir. It utilized
+[astyle](http://astyle.sourceforge.net/) to do the job, so you should install
+this tool first.
+
 ## Reference
 
 ### LogLog Counting and Adaptive Counting
