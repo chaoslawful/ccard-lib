@@ -159,7 +159,7 @@ TEST(AdaptiveCounting, RawMerge)
     adp_cnt_ctx_t *ctx = adp_cnt_raw_init(NULL, 16, CCARD_HASH_LOOKUP3);
     adp_cnt_ctx_t *tbm1 = adp_cnt_raw_init(NULL, 16, CCARD_HASH_LOOKUP3);
     adp_cnt_ctx_t *tbm2 = adp_cnt_raw_init(NULL, 16, CCARD_HASH_LOOKUP3);
-    int32_t m = pow(2, 16);
+    int32_t m = 1<<16;
     uint8_t buf1[m + 3], buf2[m + 3];
     uint32_t len1 = m + 3, len2 = m + 3;
 
@@ -201,7 +201,7 @@ TEST(AdaptiveCounting, Merge)
     adp_cnt_ctx_t *ctx = adp_cnt_init(NULL, 16, CCARD_HASH_LOOKUP3);
     adp_cnt_ctx_t *tbm1 = adp_cnt_init(NULL, 16, CCARD_HASH_LOOKUP3);
     adp_cnt_ctx_t *tbm2 = adp_cnt_init(NULL, 16, CCARD_HASH_LOOKUP3);
-    int32_t m = pow(2, 16);
+    int32_t m = 1<<16;
     uint8_t buf1[m + 3], buf2[m + 3];
     uint32_t len1 = m + 3, len2 = m + 3;
 
