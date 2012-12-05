@@ -26,5 +26,4 @@ t/unittest
 # Temporary files
 *~
 *.orig
-ext
 
