@@ -9,8 +9,13 @@ For more information about this algorithms please read the [Reference](#referenc
 
 ## Building
 
-Building ccard-lib needs the [scons](http://www.scons.org/). Please read document 
-at [scons homepage](http://www.scons.org/) for more information about it.
+Building ccard-lib needs the [scons](http://www.scons.org/). Please read
+[scons user guide](http://www.scons.org/doc/production/HTML/scons-user/index.html) for
+more information about it.
+
+Building PHP extension of ccard-lib needs [SWIG](http://www.swig.org/) to be
+installed. Running unit-tests need
+[googletest](http://code.google.com/p/googletest/) to be installed.
 
 ### Building as Library
 
@@ -20,9 +25,13 @@ Assuming you have scons installed, just build ccard-lib like this:
 
 Scons will build and install ccard-lib to your system.
 
-Default the ccard-lib will be installed at "/usr/local/lib", if you want to change the 
-install directory please replace the "libdir" that in SConsturc file by your target 
-directory.
+You can also run unit-tests to make sure the library works as expected:
+
+	scons test
+
+Default the ccard-lib will be installed at "/usr/local/lib", if you want to
+change the install directory please replace the "libdir" that in SConsturc file
+by your target directory.
 
 ### Building as PHP Extension
 
