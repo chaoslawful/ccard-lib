@@ -1,0 +1,13 @@
+tenv = Environment(
+        LIBS = ['pthread', 'gtest', 'gtest_main', 'ccard-lib.0.1'],
+        CPPPATH = ['../include', '/usr/local/gtest', '/usr/local/gtest/include'],
+        LIBPATH = ['/usr/lib64', '/usr/local/lib64', '../'], 
+        RPATH = ['./', '../'],
+        CCFLAGS = ['-Wall', '-Wextra', '-Werror', '-g3'])
+
+p = tenv.Program('unittest', [Glob('*.cc')])
+tenv.Alias('test', p, tenv.Action(Dir('#').abspath+'/t/unittest --gtest_color=yes'))
+tenv.AlwaysBuild('test')
+
+# vi:ft=python ts=4 sw=4 et fdm=marker
+

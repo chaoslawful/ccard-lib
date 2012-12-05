@@ -7,8 +7,9 @@
  * <p>
  * </p>
  * */
-TEST(RegisterSetTest, GetAndSet) {
-    reg_set_t *rs = rs_init(1024, NULL, 0); 
+TEST(RegisterSetTest, GetAndSet)
+{
+    reg_set_t *rs = rs_init(1024, NULL, 0);
     uint32_t value;
     int i;
 

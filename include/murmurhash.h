@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern          "C" {
 #endif
 
     /**
@@ -16,7 +16,7 @@ extern "C" {
      *
      * @return Calculated hash code.
      * */
-    uint32_t murmurhash(void *buf, uint32_t len, uint32_t seed);
+    uint32_t        murmurhash(void *buf, uint32_t len, uint32_t seed);
 
     /**
      * Generate 32bit hash code of the given 64bit integer using Murmurhash
@@ -26,13 +26,10 @@ extern "C" {
      *
      * @return Calculated hash code.
      * */
-    uint32_t murmurhash_long(uint64_t data);
+    uint32_t        murmurhash_long(uint64_t data);
 
 #ifdef __cplusplus
 }
 #endif
-
 #endif
-
 // vi:ft=c ts=4 sw=4 fdm=marker et
-

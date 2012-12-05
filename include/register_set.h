@@ -4,13 +4,13 @@
 #include <stdint.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern          "C" {
 #endif
 
     typedef struct reg_set_s {
-        uint32_t count;
-        uint32_t size;
-        uint32_t M[1];
+        uint32_t        count;
+        uint32_t        size;
+        uint32_t        M[1];
     } reg_set_t;
 
     /**
@@ -24,7 +24,8 @@ extern "C" {
      * methods.
      * @retval NULL If error occured.
      * */
-    reg_set_t *rs_init(uint32_t count, uint32_t *values, uint32_t len); 
+    reg_set_t      *rs_init(uint32_t count, uint32_t *values,
+                            uint32_t len);
 
     /**
      * Set value.
@@ -36,7 +37,7 @@ extern "C" {
      * @retval 0 If success.
      * @retval -1 If error occured.
      * */
-    int rs_set(reg_set_t *rs, uint32_t pos, uint32_t value);
+    int             rs_set(reg_set_t *rs, uint32_t pos, uint32_t value);
 
     /**
      * Get value.
@@ -48,7 +49,7 @@ extern "C" {
      * @retval 0 If success.
      * @retval -1 If error occured.
      * */
-    int rs_get(reg_set_t *rs, uint32_t pos, uint32_t *value);
+    int             rs_get(reg_set_t *rs, uint32_t pos, uint32_t *value);
 
     /**
      * Convert register set to bitmap.
@@ -60,7 +61,8 @@ extern "C" {
      * @retval 0 If success.
      * @retval -1 If error occured.
      * */
-    int rs_bits(reg_set_t *rs, uint32_t *bits, uint32_t *len);
+    int             rs_bits(reg_set_t *rs, uint32_t *bits,
+                            uint32_t * len);
 
     /**
      * Destory register set and release resource.
@@ -70,13 +72,10 @@ extern "C" {
      * @retval 0 If success.
      * @retval -1 If error occured.
      * */
-    int rs_fini(reg_set_t *rs);
+    int             rs_fini(reg_set_t *rs);
 
 #ifdef __cplusplus
 }
 #endif
-
 #endif
-
 // vi:ft=c ts=4 sw=4 fdm=marker et
-

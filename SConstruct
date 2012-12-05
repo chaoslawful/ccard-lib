@@ -29,6 +29,10 @@ env.Command(libdir+dlname, libdir+str(dl[0]), SymLink)
 env.Alias('install', libdir)
 
 #############################################################
+# build unit-test
+env.SConscript('t/SConscript')
+
+#############################################################
 # swig for php make and install
 swigEnv = Environment(SWIGFLAGS=['-php'],
         SHLIBPREFIX="")

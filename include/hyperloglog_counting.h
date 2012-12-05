@@ -4,7 +4,7 @@
 #include "ccard_common.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern          "C" {
 #endif
 
     /**
@@ -26,7 +26,8 @@ extern "C" {
      *
      * @see hll_cnt_fini
      * */
-    hll_cnt_ctx_t* hll_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf);
+    hll_cnt_ctx_t  *hll_cnt_init(const void *obuf, uint32_t len_or_k,
+                                 uint8_t hf);
 
     /**
      * Retrieve the cardinality calculated from bitmap in the context using Hyperloglog Counting.
@@ -39,7 +40,7 @@ extern "C" {
      *
      * @see hll_cnt_offer, hll_cnt_reset
      * */
-    int64_t hll_cnt_card(hll_cnt_ctx_t *ctx);
+    int64_t         hll_cnt_card(hll_cnt_ctx_t *ctx);
 
     /**
      * Offer a object to be distinct counted.
@@ -54,7 +55,8 @@ extern "C" {
      *
      * @see hll_cnt_card, hll_cnt_reset
      * */
-    int hll_cnt_offer(hll_cnt_ctx_t *ctx, const void *buf, uint32_t len);
+    int             hll_cnt_offer(hll_cnt_ctx_t *ctx, const void *buf,
+                                  uint32_t len);
 
     /**
      * Reset bitmap in the context, effectively clear cardinality to zero.
@@ -66,7 +68,7 @@ extern "C" {
      *
      * @see hll_cnt_card, hll_cnt_offer
      * */
-    int hll_cnt_reset(hll_cnt_ctx_t *ctx);
+    int             hll_cnt_reset(hll_cnt_ctx_t *ctx);
 
     /**
      * Get the serialized bitmap or bitmap length from context.
@@ -81,7 +83,8 @@ extern "C" {
      *
      * @see hll_cnt_merge, hll_cnt_merge_bytes
      * */
-    int hll_cnt_get_bytes(hll_cnt_ctx_t *ctx, void *buf, uint32_t *len);
+    int             hll_cnt_get_bytes(hll_cnt_ctx_t *ctx, void *buf,
+                                      uint32_t *len);
 
     /**
      * Merge several hyperloglog counting context into the current one,
@@ -107,7 +110,8 @@ extern "C" {
      *
      * @see hll_cnt_merge_bytes, hll_cnt_get_bytes
      * */
-    int hll_cnt_merge(hll_cnt_ctx_t *ctx, hll_cnt_ctx_t *tbm, ...);
+    int             hll_cnt_merge(hll_cnt_ctx_t *ctx, hll_cnt_ctx_t *tbm,
+                                  ...);
 
     /**
      * Merge several hyperloglog counting bitmap into the current context,
@@ -135,20 +139,21 @@ extern "C" {
      *
      * @see hll_cnt_merge, hll_cnt_get_bytes
      * */
-    int hll_cnt_merge_bytes(hll_cnt_ctx_t *ctx, const void *buf, uint32_t len,
-            ...);
+    int             hll_cnt_merge_bytes(hll_cnt_ctx_t *ctx,
+                                        const void *buf, uint32_t len,
+                                        ...);
 
     /**
      * Finalize and release resources of the given hyperloglog counting context.
      *
      * @param[in] ctx Pointer to the context to release.
-     * 
+     *
      * @retval 0 if finalized successfully.
      * @retval -1 if error occured.
      *
      * @see hll_cnt_init
      * */
-    int hll_cnt_fini(hll_cnt_ctx_t *ctx);
+    int             hll_cnt_fini(hll_cnt_ctx_t *ctx);
 
     /**
      * Get error status of the given context.
@@ -159,19 +164,19 @@ extern "C" {
      *
      * @see hll_cnt_errstr
      * */
-    int hll_cnt_errnum(hll_cnt_ctx_t *ctx);
+    int             hll_cnt_errnum(hll_cnt_ctx_t *ctx);
 
     /**
      * Convert error status to human-friendly message.
      *
      * @param[in] errn Error number returned by hll_cnt_errnum.
-     * 
+     *
      * @retval not-NULL Corresponding message string.
      * @retval NULL Invalid error number.
      *
      * @see hll_cnt_errnum
      * */
-    const char* hll_cnt_errstr(int errn);
+    const char     *hll_cnt_errstr(int errn);
 
     /**
      * Hyperloglog counting algorithm definition
@@ -181,8 +186,5 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-
 #endif
-
 // vi:ft=c ts=4 sw=4 fdm=marker et
-

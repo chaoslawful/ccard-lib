@@ -1,5 +1,5 @@
 #!/bin/bash
 
 #find . -name *.c -or -name *.h -exec indent -kr -cd30 -nut -ts4 -di16 '{}' ';'
-find .  -name '*.c' -or -name '*.h' -exec astyle -A3 -s4 '{}' ';'
+find .  -name '*.c' -or -name '*.h' -or -name '*.cc' -exec astyle -A3 -s4 '{}' ';'
 

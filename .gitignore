@@ -22,3 +22,9 @@ t/unittest
 
 # SConstruct caches
 .scons*
+
+# Temporary files
+*~
+*.orig
+ext
+

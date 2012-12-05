@@ -11,7 +11,8 @@
  * Use LinearCounting algorithm
  * </p>
  * */
-TEST(LinearCounting, Counting) {
+TEST(LinearCounting, Counting)
+{
     int64_t i, esti;
     lnr_cnt_ctx_t *ctx1 = lnr_cnt_init(NULL, 16, CCARD_HASH_MURMUR);
     lnr_cnt_ctx_t *ctx2 = lnr_cnt_init(NULL, 16, CCARD_HASH_LOOKUP3);
@@ -22,8 +23,8 @@ TEST(LinearCounting, Counting) {
 
         if (i % 50000 == 0) {
             esti = lnr_cnt_card(ctx1);
-            printf("actual: %lu, estimated: %lu, error: %.2f%%\n", 
-                    (long unsigned int)i, (long unsigned int)esti, fabs((double)(esti - i) / i * 100));
+            printf("actual: %lu, estimated: %lu, error: %.2f%%\n",
+                   (long unsigned int)i, (long unsigned int)esti, fabs((double)(esti - i) / i * 100));
         }
     }
     printf("\n");
@@ -36,8 +37,8 @@ TEST(LinearCounting, Counting) {
 
         if (i % 50000 == 0) {
             esti = lnr_cnt_card(ctx2);
-            printf("actual: %lu, estimated: %lu, error: %.2f%%\n", 
-                    (long unsigned int)i, (long unsigned int)esti, fabs((double)(esti - i) / i * 100));
+            printf("actual: %lu, estimated: %lu, error: %.2f%%\n",
+                   (long unsigned int)i, (long unsigned int)esti, fabs((double)(esti - i) / i * 100));
         }
     }
     printf("\n");
@@ -58,7 +59,8 @@ TEST(LinearCounting, Counting) {
  * <li>Merges buf1 and buf2 into current context</li>
  * </ol>
  * */
-TEST(LinearCounting, Merge) {
+TEST(LinearCounting, Merge)
+{
     int64_t i, esti;
     lnr_cnt_ctx_t *ctx = lnr_cnt_init(NULL, 16, CCARD_HASH_MURMUR);
     lnr_cnt_ctx_t *tbm1 = lnr_cnt_init(NULL, 16, CCARD_HASH_MURMUR);
@@ -81,8 +83,8 @@ TEST(LinearCounting, Merge) {
 
     lnr_cnt_merge_bytes(ctx, buf1, len1, buf2, len2, NULL);
     esti = lnr_cnt_card(ctx);
-    printf("actual:40000, estimated: %lu, error: %.2f%%\n", 
-            (long unsigned int)esti, fabs((double)(esti - 40000) / 40000 * 100));
+    printf("actual:40000, estimated: %lu, error: %.2f%%\n",
+           (long unsigned int)esti, fabs((double)(esti - 40000) / 40000 * 100));
 
     lnr_cnt_fini(tbm2);
     lnr_cnt_fini(tbm1);

@@ -78,7 +78,7 @@ static uint8_t num_of_trail_zeros(uint64_t i)
     return n - (uint8_t)((i << 1) >> 63);
 }
 
-adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
+adp_cnt_ctx_t* adp_cnt_raw_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
 {
     adp_cnt_ctx_t *ctx;
     uint8_t *buf = (uint8_t*)obuf;
@@ -93,14 +93,6 @@ adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
         uint32_t i;
         uint8_t k = num_of_trail_zeros(len_or_k);
 
-        if (buf[0] != CCARD_ALGO_ADAPTIVE || 
-            buf[1] != hf ||
-            buf[2] != k) {
-
-            // counting algorithm, hash function or length not match
-            return NULL;
-        }
-
         if (len_or_k != (uint32_t)(1 << k)) {
             // invalid buffer size, its length must be a power of 2
             return NULL;
@@ -108,15 +100,14 @@ adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
 
         ctx = (adp_cnt_ctx_t *)malloc(sizeof(adp_cnt_ctx_t) + len_or_k - 1);
         ctx->err = CCARD_OK;
-        // bitmap has 3 bytes header
-        memcpy(ctx->M, &buf[3], len_or_k);
+        memcpy(ctx->M, buf, len_or_k);
         ctx->m = len_or_k;
         ctx->k = k;
         ctx->Ca = alpha[k];
         ctx->Rsum = 0;
         ctx->hf = hf;
         ctx->b_e = ctx->m;
-        for(i = 3; i < len_or_k + 3; ++i) {
+        for(i = 0; i < len_or_k; ++i) {
             ctx->Rsum += buf[i];
             if (buf[i] > 0) {
                 ctx->b_e--;
@@ -141,6 +132,27 @@ adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
     }
 
     return ctx;
+}
+
+adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
+{
+    uint8_t *buf = (uint8_t*)obuf;
+
+    if (buf) {
+        uint8_t k = num_of_trail_zeros(len_or_k);
+
+        if (buf[0] != CCARD_ALGO_ADAPTIVE || 
+            buf[1] != hf ||
+            buf[2] != k) {
+
+            // counting algorithm, hash function or length not match
+            return NULL;
+        }
+
+        return adp_cnt_raw_init(buf+3, len_or_k, hf);
+    }
+
+    return adp_cnt_raw_init(NULL, len_or_k, hf);
 }
 
 int64_t adp_cnt_card_loglog(adp_cnt_ctx_t *ctx)
@@ -213,6 +225,22 @@ int adp_cnt_offer(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len)
     return modified;
 }
 
+int adp_cnt_get_raw_bytes(adp_cnt_ctx_t *ctx, void *buf, uint32_t *len)
+{
+    uint8_t *out = (uint8_t*)buf;
+
+    if (!ctx || !len || (out && *len < ctx->m)) {
+        return -1;
+    }
+
+    if(out) {
+        memcpy(out, ctx->M, ctx->m);
+    }
+    *len = ctx->m;
+
+    return 0;
+}
+
 int adp_cnt_get_bytes(adp_cnt_ctx_t *ctx, void *buf, uint32_t *len)
 {
     /*
@@ -223,15 +251,15 @@ int adp_cnt_get_bytes(adp_cnt_ctx_t *ctx, void *buf, uint32_t *len)
     uint8_t algo = CCARD_ALGO_ADAPTIVE;
     uint8_t *out = (uint8_t *)buf;
 
-    if (!ctx || (*len < ctx->m + 3)) {
+    if (!ctx || !len || (out && *len < ctx->m+3)) {
         return -1;
     }
 
-    if (buf) {
+    if (out) {
         out[0] = algo;
         out[1] = ctx->hf;
         out[2] = ctx->k;
-        memcpy(&out[3], ctx->M, ctx->m);
+        memcpy(out+3, ctx->M, ctx->m);
     }
     *len = ctx->m + 3;
 
@@ -278,6 +306,48 @@ int adp_cnt_merge(adp_cnt_ctx_t *ctx, adp_cnt_ctx_t *tbm, ...)
                     ctx->M[i] = bm->M[i];
                 }
             }
+        }
+        va_end(vl);
+    }
+
+    ctx->err = CCARD_OK;
+    return 0;
+}
+
+int adp_cnt_merge_raw_bytes(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
+{
+    va_list vl;
+    uint8_t *in;
+    adp_cnt_ctx_t *bctx;
+
+    if (!ctx) {
+        return -1;
+    }
+
+    if (buf) {
+        in = (uint8_t *)buf;
+        /* Cannot merge bitmap of different sizes */
+        if (ctx->m != len) {
+            ctx->err = CCARD_ERR_MERGE_FAILED;
+            return -1;
+        }
+
+        bctx = adp_cnt_raw_init(in, ctx->m, ctx->hf);
+        adp_cnt_merge(ctx, bctx, NULL);
+        adp_cnt_fini(bctx);
+
+        va_start(vl, len);
+        while ((in = (uint8_t *)va_arg(vl, const void *)) != NULL) {
+            len = va_arg(vl, uint32_t);
+
+            if (ctx->m != len) {
+                ctx->err = CCARD_ERR_MERGE_FAILED;
+                return -1;
+            }
+
+            bctx = adp_cnt_raw_init(in, ctx->m, ctx->hf);
+            adp_cnt_merge(ctx, bctx, NULL);
+            adp_cnt_fini(bctx);
         }
         va_end(vl);
     }

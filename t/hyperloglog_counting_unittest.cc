@@ -11,7 +11,8 @@
  * Use HyperloglogCounting algorithm
  * </p>
  * */
-TEST(HyperloglogCounting, Counting) {
+TEST(HyperloglogCounting, Counting)
+{
     int64_t i, esti;
     hll_cnt_ctx_t *ctx1 = hll_cnt_init(NULL, 16, CCARD_HASH_MURMUR);
     hll_cnt_ctx_t *ctx2 = hll_cnt_init(NULL, 16, CCARD_HASH_LOOKUP3);
@@ -22,8 +23,8 @@ TEST(HyperloglogCounting, Counting) {
 
         if (i % 50000 == 0) {
             esti = hll_cnt_card(ctx1);
-            printf("actual: %lu, estimated: %lu, error: %.2f%%\n", 
-                    (long unsigned int)i, (long unsigned int)esti, fabs((double)(esti - i) / i * 100));
+            printf("actual: %lu, estimated: %lu, error: %.2f%%\n",
+                   (long unsigned int)i, (long unsigned int)esti, fabs((double)(esti - i) / i * 100));
         }
     }
     printf("\n");
@@ -36,8 +37,8 @@ TEST(HyperloglogCounting, Counting) {
 
         if (i % 50000 == 0) {
             esti = hll_cnt_card(ctx2);
-            printf("actual: %lu, estimated: %lu, error: %.2f%%\n", 
-                    (long unsigned int)i, (long unsigned int)esti, fabs((double)(esti - i) / i * 100));
+            printf("actual: %lu, estimated: %lu, error: %.2f%%\n",
+                   (long unsigned int)i, (long unsigned int)esti, fabs((double)(esti - i) / i * 100));
         }
     }
     printf("\n");
@@ -58,7 +59,8 @@ TEST(HyperloglogCounting, Counting) {
  * <li>Merges buf1 and buf2 into current context</li>
  * </ol>
  * */
-TEST(HyperloglogCounting, Merge) {
+TEST(HyperloglogCounting, Merge)
+{
     int64_t i, esti;
     hll_cnt_ctx_t *ctx = hll_cnt_init(NULL, 16, CCARD_HASH_MURMUR);
     hll_cnt_ctx_t *tbm1 = hll_cnt_init(NULL, 16, CCARD_HASH_MURMUR);
@@ -81,8 +83,8 @@ TEST(HyperloglogCounting, Merge) {
 
     hll_cnt_merge_bytes(ctx, buf1, len1, buf2, len2, NULL);
     esti = hll_cnt_card(ctx);
-    printf("actual:40000, estimated: %lu, error: %.2f%%\n", 
-            (long unsigned int)esti, fabs((double)(esti - 40000) / 40000 * 100));
+    printf("actual:40000, estimated: %lu, error: %.2f%%\n",
+           (long unsigned int)esti, fabs((double)(esti - 40000) / 40000 * 100));
 
     hll_cnt_fini(tbm2);
     hll_cnt_fini(tbm1);

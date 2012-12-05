@@ -69,7 +69,7 @@ to know how to use ccard-lib.
  Hyperloglog: The analysis of a near-optimal cardinality
  estimation algorithm. Disc. Math. and Theor. Comp. Sci., AH:127-146, 2007.
 
-The implemention refers [stream-lib](https://raw.github.com/clearspring/stream-lib).
+The implemention refers [stream-lib](https://github.com/clearspring/stream-lib).
 
 ## Experiment
 

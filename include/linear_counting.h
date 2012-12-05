@@ -4,7 +4,7 @@
 #include "ccard_common.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern          "C" {
 #endif
 
     /**
@@ -26,7 +26,8 @@ extern "C" {
      *
      * @see lnr_cnt_fini
      * */
-    lnr_cnt_ctx_t* lnr_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf);
+    lnr_cnt_ctx_t  *lnr_cnt_init(const void *obuf, uint32_t len_or_k,
+                                 uint8_t hf);
 
     /**
      * Retrieve the cardinality calculated from bitmap in the context using Linear Counting.
@@ -39,7 +40,7 @@ extern "C" {
      *
      * @see lnr_cnt_offer, lnr_cnt_reset
      * */
-    int64_t lnr_cnt_card(lnr_cnt_ctx_t *ctx);
+    int64_t         lnr_cnt_card(lnr_cnt_ctx_t *ctx);
 
     /**
      * Offer a object to be distinct counted.
@@ -54,7 +55,8 @@ extern "C" {
      *
      * @see lnr_cnt_card, lnr_cnt_reset
      * */
-    int lnr_cnt_offer(lnr_cnt_ctx_t *ctx, const void *buf, uint32_t len);
+    int             lnr_cnt_offer(lnr_cnt_ctx_t *ctx, const void *buf,
+                                  uint32_t len);
 
     /**
      * Reset bitmap in the context, effectively clear cardinality to zero.
@@ -66,7 +68,7 @@ extern "C" {
      *
      * @see lnr_cnt_card, lnr_cnt_offer
      * */
-    int lnr_cnt_reset(lnr_cnt_ctx_t *ctx);
+    int             lnr_cnt_reset(lnr_cnt_ctx_t *ctx);
 
     /**
      * Get the serialized bitmap or bitmap length from context.
@@ -81,7 +83,8 @@ extern "C" {
      *
      * @see lnr_cnt_merge, lnr_cnt_merge_bytes
      * */
-    int lnr_cnt_get_bytes(lnr_cnt_ctx_t *ctx, void *buf, uint32_t *len);
+    int             lnr_cnt_get_bytes(lnr_cnt_ctx_t *ctx, void *buf,
+                                      uint32_t *len);
 
     /**
      * Merge several linear counting context into the current one,
@@ -107,7 +110,8 @@ extern "C" {
      *
      * @see lnr_cnt_merge_bytes, lnr_cnt_get_bytes
      * */
-    int lnr_cnt_merge(lnr_cnt_ctx_t *ctx, lnr_cnt_ctx_t *tbm, ...);
+    int             lnr_cnt_merge(lnr_cnt_ctx_t *ctx, lnr_cnt_ctx_t *tbm,
+                                  ...);
 
     /**
      * Merge several linear counting bitmap into the current context,
@@ -135,20 +139,21 @@ extern "C" {
      *
      * @see lnr_cnt_merge, lnr_cnt_get_bytes
      * */
-    int lnr_cnt_merge_bytes(lnr_cnt_ctx_t *ctx, const void *buf, uint32_t len,
-            ...);
+    int             lnr_cnt_merge_bytes(lnr_cnt_ctx_t *ctx,
+                                        const void *buf, uint32_t len,
+                                        ...);
 
     /**
      * Finalize and release resources of the given linear counting context.
      *
      * @param[in] ctx Pointer to the context to release.
-     * 
+     *
      * @retval 0 if finalized successfully.
      * @retval -1 if error occured.
      *
      * @see lnr_cnt_init
      * */
-    int lnr_cnt_fini(lnr_cnt_ctx_t *ctx);
+    int             lnr_cnt_fini(lnr_cnt_ctx_t *ctx);
 
     /**
      * Get error status of the given context.
@@ -159,19 +164,19 @@ extern "C" {
      *
      * @see lnr_cnt_errstr
      * */
-    int lnr_cnt_errnum(lnr_cnt_ctx_t *ctx);
+    int             lnr_cnt_errnum(lnr_cnt_ctx_t *ctx);
 
     /**
      * Convert error status to human-friendly message.
      *
      * @param[in] errn Error number returned by lnr_cnt_errnum.
-     * 
+     *
      * @retval not-NULL Corresponding message string.
      * @retval NULL Invalid error number.
      *
      * @see lnr_cnt_errnum
      * */
-    const char* lnr_cnt_errstr(int errn);
+    const char     *lnr_cnt_errstr(int errn);
 
     /**
      * Linear counting algorithm definition
@@ -181,8 +186,5 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-
 #endif
-
 // vi:ft=c ts=4 sw=4 fdm=marker et
-
