@@ -28,10 +28,10 @@ static uint8_t count_ones(uint8_t b)
     return ones;
 }
 
-lnr_cnt_ctx_t* lnr_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
+lnr_cnt_ctx_t *lnr_cnt_raw_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
 {
     lnr_cnt_ctx_t *ctx;
-    uint8_t *buf = (uint8_t*)obuf;
+    uint8_t *buf = (uint8_t *)obuf;
     uint32_t i;
 
     if (len_or_k == 0) {
@@ -41,13 +41,6 @@ lnr_cnt_ctx_t* lnr_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
 
     if (buf) {
         // initial bitmap was given
-        if (buf[0] != CCARD_ALGO_LINEAR || 
-            buf[1] != hf) {
-
-            // counting algorithm, hash function or length not match
-            return NULL;
-        }
-
         if ((len_or_k & (len_or_k - 1)) != 0) {
             // invalid buffer size, its length must be a power of 2
             return NULL;
@@ -57,7 +50,7 @@ lnr_cnt_ctx_t* lnr_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
         ctx->m = len_or_k;
         ctx->length = 8 * ctx->m;
         ctx->count = ctx->length;
-        memcpy(ctx->M, &buf[3], len_or_k);
+        memcpy(ctx->M, buf, len_or_k);
 
         for (i = 0; i < len_or_k; i++) {
             ctx->count -= count_ones(ctx->M[i]);
@@ -74,6 +67,25 @@ lnr_cnt_ctx_t* lnr_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
     ctx->hf = hf;
 
     return ctx;
+}
+
+lnr_cnt_ctx_t *lnr_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
+{
+    uint8_t *buf = (uint8_t *)obuf;
+
+    if (buf) {
+        // initial bitmap was given
+        if (buf[0] != CCARD_ALGO_LINEAR ||
+            buf[1] != hf) {
+
+            // counting algorithm, hash function or length not match
+            return NULL;
+        }
+
+        return lnr_cnt_raw_init(buf+3, len_or_k, hf);
+    }
+
+    return lnr_cnt_raw_init(NULL, len_or_k, hf);
 }
 
 int64_t lnr_cnt_card(lnr_cnt_ctx_t *ctx)
@@ -122,6 +134,22 @@ int lnr_cnt_offer(lnr_cnt_ctx_t *ctx, const void *buf, uint32_t len)
     return modified;
 }
 
+int lnr_cnt_get_raw_bytes(lnr_cnt_ctx_t *ctx, void *buf, uint32_t *len)
+{
+    uint8_t *out = (uint8_t *)buf;
+
+    if (!ctx || !len || (buf && *len < ctx->m + 3)) {
+        return -1;
+    }
+
+    if (buf) {
+        memcpy(out, ctx->M, ctx->m);
+    }
+    *len = ctx->m;
+
+    return 0;
+}
+
 int lnr_cnt_get_bytes(lnr_cnt_ctx_t *ctx, void *buf, uint32_t *len)
 {
     /*
@@ -134,7 +162,7 @@ int lnr_cnt_get_bytes(lnr_cnt_ctx_t *ctx, void *buf, uint32_t *len)
     uint8_t log2m = 1;
     uint32_t m = ctx->m;
 
-    if (!ctx || (*len < ctx->m + 3)) {
+    if (!ctx || !len || (buf && *len < ctx->m + 3)) {
         return -1;
     }
 
@@ -198,6 +226,48 @@ int lnr_cnt_merge(lnr_cnt_ctx_t *ctx, lnr_cnt_ctx_t *tbm, ...)
     return 0;
 }
 
+int lnr_cnt_merge_raw_bytes(lnr_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
+{
+    va_list vl;
+    uint8_t *in;
+    lnr_cnt_ctx_t *bctx;
+
+    if (!ctx) {
+        return -1;
+    }
+
+    if (buf) {
+        in = (uint8_t *)buf;
+        /* Cannot merge bitmap of different sizes */
+        if (ctx->m != len) {
+            ctx->err = CCARD_ERR_MERGE_FAILED;
+            return -1;
+        }
+
+        bctx = lnr_cnt_raw_init(in, ctx->m, ctx->hf);
+        lnr_cnt_merge(ctx, bctx, NULL);
+        lnr_cnt_fini(bctx);
+
+        va_start(vl, len);
+        while ((in = (uint8_t *)va_arg(vl, const void *)) != NULL) {
+            len = va_arg(vl, uint32_t);
+
+            if (ctx->m != len) {
+                ctx->err = CCARD_ERR_MERGE_FAILED;
+                return -1;
+            }
+
+            bctx = lnr_cnt_raw_init(in, ctx->m, ctx->hf);
+            lnr_cnt_merge(ctx, bctx, NULL);
+            lnr_cnt_fini(bctx);
+        }
+        va_end(vl);
+    }
+
+    ctx->err = CCARD_OK;
+    return 0;
+}
+
 int lnr_cnt_merge_bytes(lnr_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
 {
     va_list vl;
@@ -210,10 +280,10 @@ int lnr_cnt_merge_bytes(lnr_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
 
     if (buf) {
         in = (uint8_t *)buf;
-        /* Cannot merge bitmap of different sizes, 
+        /* Cannot merge bitmap of different sizes,
         different hash functions or different algorithms */
-        if ((ctx->m + 3 != len) || 
-            (in[0] != CCARD_ALGO_LINEAR) || 
+        if ((ctx->m + 3 != len) ||
+            (in[0] != CCARD_ALGO_LINEAR) ||
             (in[1] != ctx->hf)) {
 
             ctx->err = CCARD_ERR_MERGE_FAILED;
@@ -228,8 +298,8 @@ int lnr_cnt_merge_bytes(lnr_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
         while ((in = (uint8_t *)va_arg(vl, const void *)) != NULL) {
             len = va_arg(vl, uint32_t);
 
-            if ((ctx->m + 3 != len) || 
-                (in[0] != CCARD_ALGO_LINEAR) || 
+            if ((ctx->m + 3 != len) ||
+                (in[0] != CCARD_ALGO_LINEAR) ||
                 (in[1] != ctx->hf)) {
 
                 ctx->err = CCARD_ERR_MERGE_FAILED;
@@ -279,7 +349,7 @@ int lnr_cnt_errnum(lnr_cnt_ctx_t *ctx)
     return CCARD_ERR_INVALID_CTX;
 }
 
-const char* lnr_cnt_errstr(int err)
+const char *lnr_cnt_errstr(int err)
 {
     static const char *msg[] = {
         "No error",

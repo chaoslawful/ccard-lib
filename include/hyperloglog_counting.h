@@ -13,6 +13,23 @@ extern          "C" {
     typedef struct hll_cnt_ctx_s hll_cnt_ctx_t;
 
     /**
+     * Initialize hyperloglog counting context with optional raw bitmap.
+     *
+     * @param[in] buf Pointer to the raw bitmap. NULL if there's none.
+     * @param[in] len_or_k The length of the bitmap if buf is not NULL;
+     * otherwise it's the base-2 logarithm of the bitmap length.
+     * @param[in] hf Hash function that be applied to elements.
+     *
+     * @retval not-NULL An initialized context to be used with the rest of
+     * methods.
+     * @retval NULL If error occured.
+     *
+     * @see hll_cnt_fini, hll_cnt_init
+     * */
+    hll_cnt_ctx_t  *hll_cnt_raw_init(const void *obuf, uint32_t len_or_k,
+                                     uint8_t hf);
+
+    /**
      * Initialize hyperloglog counting context with optional serialized bitmap.
      *
      * @param[in] buf Pointer to the serialized bitmap. NULL if there's none.
@@ -24,7 +41,7 @@ extern          "C" {
      * methods.
      * @retval NULL If error occured.
      *
-     * @see hll_cnt_fini
+     * @see hll_cnt_fini, hll_cnt_raw_init
      * */
     hll_cnt_ctx_t  *hll_cnt_init(const void *obuf, uint32_t len_or_k,
                                  uint8_t hf);
@@ -71,6 +88,22 @@ extern          "C" {
     int             hll_cnt_reset(hll_cnt_ctx_t *ctx);
 
     /**
+     * Get the raw bitmap or bitmap length from context.
+     *
+     * @param[in] ctx Pointer to the context.
+     * @param[out] buf Pointer to buffer storing returning bitmap. NULL if only
+     * bitmap length is needed.
+     * @param[out] len Pointer to variable storing returning bitmap length.
+     *
+     * @retval 0 If success.
+     * @retval -1 If error occured.
+     *
+     * @see hll_cnt_merge, hll_cnt_merge_raw_bytes, hll_cnt_get_bytes
+     * */
+    int             hll_cnt_get_raw_bytes(hll_cnt_ctx_t *ctx, void *buf,
+                                          uint32_t *len);
+
+    /**
      * Get the serialized bitmap or bitmap length from context.
      *
      * @param[in] ctx Pointer to the context.
@@ -81,7 +114,7 @@ extern          "C" {
      * @retval 0 If success.
      * @retval -1 If error occured.
      *
-     * @see hll_cnt_merge, hll_cnt_merge_bytes
+     * @see hll_cnt_merge, hll_cnt_merge_bytes, hll_cnt_get_raw_bytes
      * */
     int             hll_cnt_get_bytes(hll_cnt_ctx_t *ctx, void *buf,
                                       uint32_t *len);
@@ -119,6 +152,36 @@ extern          "C" {
      *
      * Usage:
      * @code{c}
+     * if(hll_cnt_merge_raw_bytes(ctx, buf_1, len_1, buf_2, len_2,
+     *     ..., buf_n, len_n, NULL)) {
+     *     printf("Failed to merge bitmaps: %s",
+     *            hll_cnt_errstr(hll_cnt_errnum(ctx)));
+     * }
+     * @endcode
+     *
+     * @note All bitmap to be merged must be of the same length with the bitmap
+     * in current context, otherwise error will be returned!
+     *
+     * @param[in,out] ctx Pointer to the context merging to.
+     * @param[in] buf Pointer to the first bitmap to be merged.
+     * @param[in] len Length of the first bitmap to be merged. The rest buf/len
+     * pairs will be listed sequentially with a ending NULL.
+     *
+     * @retval 0 if all were merged successfully.
+     * @retval -1 if error occured.
+     *
+     * @see hll_cnt_merge, hll_cnt_get_bytes, hll_cnt_merge_bytes
+     * */
+    int             hll_cnt_merge_raw_bytes(hll_cnt_ctx_t *ctx,
+                                            const void *buf, uint32_t len,
+                                            ...);
+
+    /**
+     * Merge several hyperloglog counting bitmap into the current context,
+     * effectively combined all distinct countings.
+     *
+     * Usage:
+     * @code{c}
      * if(hll_cnt_merge_bytes(ctx, buf_1, len_1, buf_2, len_2,
      *     ..., buf_n, len_n, NULL)) {
      *     printf("Failed to merge bitmaps: %s",
@@ -137,7 +200,7 @@ extern          "C" {
      * @retval 0 if all were merged successfully.
      * @retval -1 if error occured.
      *
-     * @see hll_cnt_merge, hll_cnt_get_bytes
+     * @see hll_cnt_merge, hll_cnt_get_bytes, hll_cnt_merge_raw_bytes
      * */
     int             hll_cnt_merge_bytes(hll_cnt_ctx_t *ctx,
                                         const void *buf, uint32_t len,

@@ -78,10 +78,10 @@ static uint8_t num_of_trail_zeros(uint64_t i)
     return n - (uint8_t)((i << 1) >> 63);
 }
 
-adp_cnt_ctx_t* adp_cnt_raw_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
+adp_cnt_ctx_t *adp_cnt_raw_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
 {
     adp_cnt_ctx_t *ctx;
-    uint8_t *buf = (uint8_t*)obuf;
+    uint8_t *buf = (uint8_t *)obuf;
 
     if (len_or_k == 0) {
         // invalid buffer length or k
@@ -134,14 +134,14 @@ adp_cnt_ctx_t* adp_cnt_raw_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
     return ctx;
 }
 
-adp_cnt_ctx_t* adp_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
+adp_cnt_ctx_t *adp_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
 {
-    uint8_t *buf = (uint8_t*)obuf;
+    uint8_t *buf = (uint8_t *)obuf;
 
     if (buf) {
         uint8_t k = num_of_trail_zeros(len_or_k);
 
-        if (buf[0] != CCARD_ALGO_ADAPTIVE || 
+        if (buf[0] != CCARD_ALGO_ADAPTIVE ||
             buf[1] != hf ||
             buf[2] != k) {
 
@@ -227,7 +227,7 @@ int adp_cnt_offer(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len)
 
 int adp_cnt_get_raw_bytes(adp_cnt_ctx_t *ctx, void *buf, uint32_t *len)
 {
-    uint8_t *out = (uint8_t*)buf;
+    uint8_t *out = (uint8_t *)buf;
 
     if (!ctx || !len || (out && *len < ctx->m)) {
         return -1;
@@ -368,10 +368,10 @@ int adp_cnt_merge_bytes(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
 
     if (buf) {
         in = (uint8_t *)buf;
-        /* Cannot merge bitmap of different sizes, 
+        /* Cannot merge bitmap of different sizes,
         different hash functions or different algorithms */
-        if ((ctx->m + 3 != len) || 
-            (in[0] != CCARD_ALGO_ADAPTIVE) || 
+        if ((ctx->m + 3 != len) ||
+            (in[0] != CCARD_ALGO_ADAPTIVE) ||
             (in[1] != ctx->hf)) {
 
             ctx->err = CCARD_ERR_MERGE_FAILED;
@@ -386,8 +386,8 @@ int adp_cnt_merge_bytes(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
         while ((in = (uint8_t *)va_arg(vl, const void *)) != NULL) {
             len = va_arg(vl, uint32_t);
 
-            if ((ctx->m + 3 != len) || 
-                (in[0] != CCARD_ALGO_ADAPTIVE) || 
+            if ((ctx->m + 3 != len) ||
+                (in[0] != CCARD_ALGO_ADAPTIVE) ||
                 (in[1] != ctx->hf)) {
 
                 ctx->err = CCARD_ERR_MERGE_FAILED;
@@ -438,7 +438,7 @@ int adp_cnt_errnum(adp_cnt_ctx_t *ctx)
     return CCARD_ERR_INVALID_CTX;
 }
 
-const char* adp_cnt_errstr(int err)
+const char *adp_cnt_errstr(int err)
 {
     static const char *msg[] = {
         "No error",

@@ -40,6 +40,9 @@ extern          "C" {
      * C-card algorithm definition
      * */
     typedef struct ccard_algo_s {
+        /// Allocate algorithm ctx with optional raw data
+        void           *(*raw_init) (const void *buf, uint32_t len_or_hint,
+                                     uint8_t hf);
         /// Allocate algorithm ctx with optional external data
         void           *(*init) (const void *buf, uint32_t len_or_hint,
                                  uint8_t hf);
@@ -50,11 +53,17 @@ extern          "C" {
                                   uint32_t len);
         /// Reset count to zero
         int             (*reset) (void *ctx);
+        /// Get raw bytes of the algorithm state
+        int             (*get_raw_bytes) (void *ctx, void *buf,
+                                          uint32_t *len);
         /// Get serialized bytes of the algorithm state
         int             (*get_bytes) (void *ctx, void *buf,
-                                      uint32_t * len);
+                                      uint32_t *len);
         /// Merge several algorithm ctx and combine their counts
         int             (*merge) (void *ctx, void *tbm, ...);
+        /// Merge several raw bytes and combine their counts
+        int             (*merge_raw_bytes) (void *ctx, const void *buf,
+                                            uint32_t len, ...);
         /// Merge several serialized bytes and combine their counts
         int             (*merge_bytes) (void *ctx, const void *buf,
                                         uint32_t len, ...);

@@ -3,7 +3,7 @@
 
 uint32_t murmurhash(void *buf, uint32_t len, uint32_t seed)
 {
-    uint8_t *data = (uint8_t*)buf;
+    uint8_t *data = (uint8_t *)buf;
     uint32_t m = 0x5bd1e995;
     uint32_t r = 24;
     uint32_t h = seed ^ len;
@@ -11,7 +11,7 @@ uint32_t murmurhash(void *buf, uint32_t len, uint32_t seed)
     uint32_t i;
     uint32_t len_m;
     uint32_t left;
-    
+
     for(i = 0; i < len_4; i++) {
         uint32_t i_4 = i << 2;
         uint32_t k = data[i_4 + 3];
@@ -61,7 +61,7 @@ uint32_t murmurhash_long(uint64_t data)
 
     k ^= k >> r;
     h ^= k*m;
-    
+
     k = (data >> 32) * m;
     k ^= k >> r;
     h *= m;

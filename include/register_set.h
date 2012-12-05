@@ -62,7 +62,7 @@ extern          "C" {
      * @retval -1 If error occured.
      * */
     int             rs_bits(reg_set_t *rs, uint32_t *bits,
-                            uint32_t * len);
+                            uint32_t *len);
 
     /**
      * Destory register set and release resource.
