@@ -3,11 +3,17 @@ php:
     - 5.2
     - 5.3
     - 5.4
+
 before_script:
     - sudo apt-get install libgtest-dev swig
     - cd /usr/src/gtest; sudo cmake .; sudo make; sudo mv libg* /usr/lib/; cd -
+
+# As we need compiling PHP extension, language must be set to php, which means
+# compiler: option doesn't work. So we have to manually setup gcc/clang
+# compiler matrix here.
 env:
     - CC=gcc CXX=g++
     - CC=clang CXX=clang++
+
 script: scons test && sudo scons install && sudo scons install-php
 
