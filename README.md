@@ -9,6 +9,8 @@ For more information about this algorithms please read the [Reference](#referenc
 
 ## Building
 
+[![Build Status](https://travis-ci.org/chaoslawful/ccard-lib.png)](https://travis-ci.org/chaoslawful/ccard-lib)
+
 Building ccard-lib needs the [scons](http://www.scons.org/). Please read
 [scons user guide](http://www.scons.org/doc/production/HTML/scons-user/index.html) for
 more information about it.
