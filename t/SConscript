@@ -1,13 +1,18 @@
-tenv = Environment(
+import os
+
+env = Environment(
         LIBS = ['pthread', 'gtest', 'gtest_main', 'ccard-lib.0.1'],
         CPPPATH = ['../include'],
         LIBPATH = ['/usr/lib', '/usr/lib64', '/usr/local/lib64', '../'],
         RPATH = ['./', '../'],
         CCFLAGS = ['-Wall', '-Wextra', '-Werror', '-g3']
         )
+env["CC"] = os.getenv("CC") or env["CC"]
+env["CXX"] = os.getenv("CXX") or env["CXX"]
+env["ENV"].update(x for x in os.environ.items() if x[0].startswith("CCC_"))
 
-p = tenv.Program('unittest', [Glob('*.cc')])
-tenv.Alias('test', p, tenv.Action(Dir('#').abspath+'/t/unittest --gtest_color=yes'))
-tenv.AlwaysBuild('test')
+p = env.Program('unittest', [Glob('*.cc')])
+env.Alias('test', p, env.Action(Dir('#').abspath+'/t/unittest --gtest_color=yes'))
+env.AlwaysBuild('test')
 
 # vi:ft=python ts=4 sw=4 et fdm=marker

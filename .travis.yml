@@ -3,11 +3,11 @@ php:
     - 5.2
     - 5.3
     - 5.4
-compiler:
-    - gcc
-    - clang
 before_script:
     - sudo apt-get install libgtest-dev swig
     - cd /usr/src/gtest; sudo cmake .; sudo make; sudo mv libg* /usr/lib/; cd -
-script: scons test
+env:
+    - CC=gcc CXX=g++
+    - CC=clang CXX=clang++
+script: scons test && sudo scons install && sudo scons install-php
 
