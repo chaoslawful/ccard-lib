@@ -3,7 +3,8 @@ tenv = Environment(
         CPPPATH = ['../include'],
         LIBPATH = ['/usr/lib64', '/usr/local/lib64', '../'],
         RPATH = ['./', '../'],
-        CCFLAGS = ['-Wall', '-Wextra', '-Werror', '-g3'])
+        CCFLAGS = ['-Wall', '-Wextra', '-Werror', '-g3']
+        )
 
 p = tenv.Program('unittest', [Glob('*.cc')])
 tenv.Alias('test', p, tenv.Action(Dir('#').abspath+'/t/unittest --gtest_color=yes'))

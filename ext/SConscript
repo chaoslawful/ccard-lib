@@ -1,10 +1,13 @@
 # swig for php make and install
-env = Environment(SWIGFLAGS=['-php'],
-        SHLIBPREFIX="")
+env = Environment(
+        ENV = {'PATH' : os.environ['PATH']},
+        SWIGFLAGS=['-php'],
+        SHLIBPREFIX=""
+        )
 
 import commands
-env.ParseConfig("/usr/bin/env php-config --includes")
-phpLibExtDir = commands.getoutput("/usr/bin/env php-config --extension-dir")
+env.ParseConfig("php-config --includes")
+phpLibExtDir = commands.getoutput("php-config --extension-dir")
 
 swigSl = env.SharedLibrary(
         '../php_card.so',

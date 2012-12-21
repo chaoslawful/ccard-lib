@@ -7,11 +7,6 @@ compiler:
     - gcc
     - clang
 before_script:
-    #    - sudo ln -sf /opt/phpfarm/inst/bin/php-config-* /usr/bin/php-config
     - sudo apt-get install libgtest-dev swig
-    - which php-config
-    - php-config --includes
-    - export PATH
-    - ls -l /home/travis/.phpenv/shims/
 script: scons test
 

@@ -10,7 +10,8 @@ libdir = '/usr/local/lib/'
 env = Environment(
         #CC = "clang",
         CPPPATH = ["#/include"],
-        CCFLAGS = ["-Wall", "-Wextra", "-Werror", "-g3", "-std=c99"])
+        CCFLAGS = ["-Wall", "-Wextra", "-Werror", "-g3", "-std=c99"]
+        )
 
 srcs = Glob("*.c")
 libname = name + '.' + ver
