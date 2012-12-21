@@ -19,7 +19,8 @@ swigSl = env.SharedLibrary(
         ['php_ccard.i'],
         LIBS=['ccard-lib'],
         LIBPATH=['#'],
-        CCFLAGS=["-Iinclude"])
+        CCFLAGS=["-Iinclude"]
+        )
 
 phpLib = env.Install(phpLibExtDir, [swigSl])
 env.Alias('install-php', phpLib)

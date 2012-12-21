@@ -48,7 +48,7 @@ int adp_cnt_reset(adp_cnt_ctx_t *ctx);
     if(SWIG_ConvertPtr(*$input, (void **) &$1, SWIGTYPE_p_adp_cnt_ctx_t, 0) < 0) {
       SWIG_PHP_Error(E_ERROR, "Type error in argument 1 of adp_cnt_get_bytes. Expected SWIGTYPE_p_adp_cnt_ctx_t");
     }
-    $3 = &tmp_len;
+    $3 = (uint32_t *)&tmp_len;
     $2 = alloca($1->m + 3);
     *$3 = $1->m + 3;
 %}
