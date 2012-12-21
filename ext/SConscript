@@ -3,8 +3,8 @@ env = Environment(SWIGFLAGS=['-php'],
         SHLIBPREFIX="")
 
 import commands
-env.ParseConfig("php-config --includes")
-phpLibExtDir = commands.getoutput("php-config --extension-dir")
+env.ParseConfig("/usr/bin/env php-config --includes")
+phpLibExtDir = commands.getoutput("/usr/bin/env php-config --extension-dir")
 
 swigSl = env.SharedLibrary(
         '../php_card.so',
