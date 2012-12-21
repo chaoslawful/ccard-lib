@@ -1,11 +1,13 @@
 # swig for php make and install
+import os
+import commands
+
 env = Environment(
         ENV = {'PATH' : os.environ['PATH']},
         SWIGFLAGS=['-php'],
         SHLIBPREFIX=""
         )
 
-import commands
 env.ParseConfig("php-config --includes")
 phpLibExtDir = commands.getoutput("php-config --extension-dir")
 
