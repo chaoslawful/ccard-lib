@@ -1,7 +1,7 @@
 tenv = Environment(
         LIBS = ['pthread', 'gtest', 'gtest_main', 'ccard-lib.0.1'],
         CPPPATH = ['../include'],
-        LIBPATH = ['/usr/lib64', '/usr/local/lib64', '../'],
+        LIBPATH = ['/usr/lib', '/usr/local/lib', '/usr/lib64', '/usr/local/lib64', '../'],
         RPATH = ['./', '../'],
         CCFLAGS = ['-Wall', '-Wextra', '-Werror', '-g3']
         )
