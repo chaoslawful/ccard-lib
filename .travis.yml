@@ -6,5 +6,7 @@ php:
 compiler:
     - gcc
     - clang
+before_script:
+    - sudo apt-get install libgtest-dev
 script: scons
 
