@@ -6,11 +6,10 @@ php:
 compiler:
     - gcc
     - clang
-env:
-    - PATH=/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin:$PATH
 before_script:
     #    - sudo ln -sf /opt/phpfarm/inst/bin/php-config-* /usr/bin/php-config
-    - sudo apt-get install libgtest-dev
-    - echo $PATH
+    - sudo apt-get install libgtest-dev swig
+    - which php-config
+    - ls -l /home/travis/.phpenv/bin
 script: scons test
 
