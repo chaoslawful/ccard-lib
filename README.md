@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/chaoslawful/ccard-lib.png)](https://travis-ci.org/chaoslawful/ccard-lib)
+
 ## Description
 
 C library for estimating cardinality in streams for 
@@ -8,8 +10,6 @@ such as Linear Counting, LogLog Counting, HyperLogLog Counting and Adaptive Coun
 For more information about this algorithms please read the [Reference](#reference) section.
 
 ## Building
-
-[![Build Status](https://travis-ci.org/chaoslawful/ccard-lib.png)](https://travis-ci.org/chaoslawful/ccard-lib)
 
 Building ccard-lib needs the [scons](http://www.scons.org/). Please read
 [scons user guide](http://www.scons.org/doc/production/HTML/scons-user/index.html) for
