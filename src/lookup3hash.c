@@ -139,3 +139,6 @@ uint64_t lookup3ycs64_2(const char *s)
 {
     return lookup3ycs64(s, 0, strlen(s), -1);
 }
+
+// vi:ft=c ts=4 sw=4 fdm=marker et
+

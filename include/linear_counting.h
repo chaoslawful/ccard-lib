@@ -249,5 +249,8 @@ extern          "C" {
 #ifdef __cplusplus
 }
 #endif
+
 #endif
+
 // vi:ft=c ts=4 sw=4 fdm=marker et
+
