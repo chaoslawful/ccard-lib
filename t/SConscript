@@ -10,4 +10,3 @@ tenv.Alias('test', p, tenv.Action(Dir('#').abspath+'/t/unittest --gtest_color=ye
 tenv.AlwaysBuild('test')
 
 # vi:ft=python ts=4 sw=4 et fdm=marker
-

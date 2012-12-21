@@ -10,11 +10,11 @@ swigSl = env.SharedLibrary(
         '../php_card.so',
         ['php_ccard.i'],
         LIBS=['ccard-lib'],
-        CCFLAGS = ["-Iinclude"])
+        LIBPATH=['#'],
+        CCFLAGS=["-Iinclude"])
 
 phpLib = env.Install(phpLibExtDir, [swigSl])
 env.Alias('install-php', phpLib)
 env.Clean(swigSl, ["ccard.php", "php_ccard.h"])
 
 # vi:ft=python ts=4 sw=4 et fdm=marker
-
