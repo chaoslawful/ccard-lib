@@ -13,30 +13,38 @@
  * */
 TEST(AdaptiveCounting, RawCounting)
 {
+    int rc;
     int64_t i, esti;
     adp_cnt_ctx_t *ctx1 = adp_cnt_raw_init(NULL, 16, CCARD_HASH_LOOKUP3);
+    EXPECT_NE(ctx1, (adp_cnt_ctx_t *)NULL);
     adp_cnt_ctx_t *ctx2 = adp_cnt_raw_init(NULL, 16, CCARD_HASH_MURMUR);
+    EXPECT_NE(ctx2, (adp_cnt_ctx_t *)NULL);
 
     printf("Adaptive Counting with Lookup3hash:\n");
     for (i = 1; i <= 500000L; i++) {
-        adp_cnt_offer(ctx1, &i, sizeof(int64_t));
+        rc = adp_cnt_offer(ctx1, &i, sizeof(int64_t));
+        EXPECT_NE(rc, -1);
 
         if (i % 50000 == 0) {
             esti = adp_cnt_card(ctx1);
+            EXPECT_GT(esti, 0);
             printf("actual: %lu, estimated: %lu, error: %.2f%%\n",
                    (long unsigned int)i, (long unsigned int)esti, fabs((double)(esti - i) / i * 100));
         }
     }
     printf("\n");
 
-    adp_cnt_reset(ctx1);
+    rc = adp_cnt_reset(ctx1);
+    EXPECT_NE(rc, -1);
 
     printf("Loglog Counting with Lookup3hash:\n");
     for (i = 1; i <= 500000L; i++) {
-        adp_cnt_offer(ctx1, &i, sizeof(int64_t));
+        rc = adp_cnt_offer(ctx1, &i, sizeof(int64_t));
+        EXPECT_NE(rc, -1);
 
         if (i % 50000 == 0) {
             esti = adp_cnt_card_loglog(ctx1);
+            EXPECT_GT(esti, 0);
             printf("actual: %lu, estimated: %lu, error: %.2f%%\n",
                    (long unsigned int)i, (long unsigned int)esti, fabs((double)(esti - i) / i * 100));
         }
@@ -45,32 +53,39 @@ TEST(AdaptiveCounting, RawCounting)
 
     printf("Adaptive Counting with Murmurhash:\n");
     for (i = 1; i <= 500000L; i++) {
-        adp_cnt_offer(ctx2, &i, sizeof(int64_t));
+        rc = adp_cnt_offer(ctx2, &i, sizeof(int64_t));
+        EXPECT_NE(rc, -1);
 
         if (i % 50000 == 0) {
             esti = adp_cnt_card(ctx2);
+            EXPECT_GT(esti, 0);
             printf("actual: %lu, estimated: %lu, error: %.2f%%\n",
                    (long unsigned int)i, (long unsigned int)esti, fabs((double)(esti - i) / i * 100));
         }
     }
     printf("\n");
 
-    adp_cnt_reset(ctx2);
+    rc = adp_cnt_reset(ctx2);
+    EXPECT_NE(rc, -1);
 
     printf("Loglog Counting with Murmurhash:\n");
     for (i = 1; i <= 500000L; i++) {
-        adp_cnt_offer(ctx2, &i, sizeof(int64_t));
+        rc = adp_cnt_offer(ctx2, &i, sizeof(int64_t));
+        EXPECT_NE(rc, -1);
 
         if (i % 50000 == 0) {
             esti = adp_cnt_card_loglog(ctx2);
+            EXPECT_GT(esti,0);
             printf("actual: %lu, estimated: %lu, error: %.2f%%\n",
                    (long unsigned int)i, (long unsigned int)esti, fabs((double)(esti - i) / i * 100));
         }
     }
     printf("\n");
 
-    adp_cnt_fini(ctx2);
-    adp_cnt_fini(ctx1);
+    rc = adp_cnt_fini(ctx2);
+    EXPECT_NE(rc, -1);
+    rc = adp_cnt_fini(ctx1);
+    EXPECT_NE(rc, -1);
 }
 
 /**
