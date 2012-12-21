@@ -8,5 +8,6 @@ compiler:
     - clang
 before_script:
     - sudo apt-get install libgtest-dev swig
+    - dpkg -L libgtest-dev
 script: scons test
 
