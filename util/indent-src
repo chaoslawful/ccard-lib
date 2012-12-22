@@ -1,5 +1,5 @@
 #!/bin/bash
-INDENT="astyle -A3 -s4 -S -c -k3 -W3 -O -o -Y -m0 -n"
+INDENT="astyle -A3 -s4 -S -c -k3 -W3 -O -o -Y -m0 -n -p"
 find . -name '*.[c,h]' -exec $INDENT '{}' ';'
 find . -name '*.cc' -exec $INDENT '{}' ';'
 

@@ -60,12 +60,12 @@ uint32_t murmurhash_long(uint64_t data)
     uint32_t k = (uint32_t)(data * m);
 
     k ^= k >> r;
-    h ^= k*m;
+    h ^= k * m;
 
     k = (data >> 32) * m;
     k ^= k >> r;
     h *= m;
-    h ^= k*m;
+    h ^= k * m;
 
     h ^= h >> 13;
     h *= m;

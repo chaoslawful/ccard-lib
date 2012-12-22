@@ -100,7 +100,7 @@ hll_cnt_ctx_t *hll_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
             return NULL;
         }
 
-        return hll_cnt_raw_init(buf+3, len_or_k, hf);
+        return hll_cnt_raw_init(buf + 3, len_or_k, hf);
     }
 
     return hll_cnt_raw_init(NULL, len_or_k, hf);
@@ -388,7 +388,7 @@ const char *hll_cnt_errstr(int err)
         NULL
     };
 
-    if (-err >= 0 && -err < (int)(sizeof(msg)/sizeof(msg[0])-1)) {
+    if (-err >= 0 && -err < (int)(sizeof(msg) / sizeof(msg[0]) - 1)) {
         return msg[-err];
     }
 

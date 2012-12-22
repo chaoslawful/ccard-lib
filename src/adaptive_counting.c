@@ -115,7 +115,7 @@ adp_cnt_ctx_t *adp_cnt_raw_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
         }
     } else {
         // k was given
-        if (len_or_k >= sizeof(alpha)/sizeof(alpha[0])) {
+        if (len_or_k >= sizeof(alpha) / sizeof(alpha[0])) {
             // exceeded maximum k
             return NULL;
         }
@@ -149,7 +149,7 @@ adp_cnt_ctx_t *adp_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
             return NULL;
         }
 
-        return adp_cnt_raw_init(buf+3, len_or_k, hf);
+        return adp_cnt_raw_init(buf + 3, len_or_k, hf);
     }
 
     return adp_cnt_raw_init(NULL, len_or_k, hf);
@@ -251,7 +251,7 @@ int adp_cnt_get_bytes(adp_cnt_ctx_t *ctx, void *buf, uint32_t *len)
     uint8_t algo = CCARD_ALGO_ADAPTIVE;
     uint8_t *out = (uint8_t *)buf;
 
-    if (!ctx || !len || (out && *len < ctx->m+3)) {
+    if (!ctx || !len || (out && *len < ctx->m + 3)) {
         return -1;
     }
 
@@ -259,7 +259,7 @@ int adp_cnt_get_bytes(adp_cnt_ctx_t *ctx, void *buf, uint32_t *len)
         out[0] = algo;
         out[1] = ctx->hf;
         out[2] = ctx->k;
-        memcpy(out+3, ctx->M, ctx->m);
+        memcpy(out + 3, ctx->M, ctx->m);
     }
     *len = ctx->m + 3;
 
@@ -447,7 +447,7 @@ const char *adp_cnt_errstr(int err)
         NULL
     };
 
-    if (-err >= 0 && -err < (int)(sizeof(msg)/sizeof(msg[0])-1)) {
+    if (-err >= 0 && -err < (int)(sizeof(msg) / sizeof(msg[0]) - 1)) {
         return msg[-err];
     }
 
