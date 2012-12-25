@@ -1,4 +1,3 @@
-#include <math.h>
 #include "ccard_common.h"
 #include "hyperloglog_counting.h"
 #include "gtest/gtest.h"
@@ -28,8 +27,8 @@ TEST(HyperloglogCounting, RawCounting)
         if (i % 50000 == 0) {
             esti = hll_cnt_card(ctx1);
             EXPECT_GT(esti, 0);
-            printf("actual: %lu, estimated: %lu, error: %.2f%%\n",
-                   (long unsigned int)i, (long unsigned int)esti, fabs((double)(esti - i) / i * 100));
+            printf("actual: %9lu, estimated: %9lu, error: %+7.2f%%\n",
+                   (long unsigned int)i, (long unsigned int)esti, (double)(esti - i) / i * 100);
         }
     }
     printf("\n");
@@ -45,8 +44,8 @@ TEST(HyperloglogCounting, RawCounting)
         if (i % 50000 == 0) {
             esti = hll_cnt_card(ctx2);
             EXPECT_GT(esti, 0);
-            printf("actual: %lu, estimated: %lu, error: %.2f%%\n",
-                   (long unsigned int)i, (long unsigned int)esti, fabs((double)(esti - i) / i * 100));
+            printf("actual: %9lu, estimated: %9lu, error: %+7.2f%%\n",
+                   (long unsigned int)i, (long unsigned int)esti, (double)(esti - i) / i * 100);
         }
     }
     printf("\n");
@@ -85,8 +84,8 @@ TEST(HyperloglogCounting, Counting)
         if (i % 50000 == 0) {
             esti = hll_cnt_card(ctx1);
             EXPECT_GT(esti, 0);
-            printf("actual: %lu, estimated: %lu, error: %.2f%%\n",
-                   (long unsigned int)i, (long unsigned int)esti, fabs((double)(esti - i) / i * 100));
+            printf("actual: %9lu, estimated: %9lu, error: %+7.2f%%\n",
+                   (long unsigned int)i, (long unsigned int)esti, (double)(esti - i) / i * 100);
         }
     }
     printf("\n");
@@ -102,8 +101,8 @@ TEST(HyperloglogCounting, Counting)
         if (i % 50000 == 0) {
             esti = hll_cnt_card(ctx2);
             EXPECT_GT(esti, 0);
-            printf("actual: %lu, estimated: %lu, error: %.2f%%\n",
-                   (long unsigned int)i, (long unsigned int)esti, fabs((double)(esti - i) / i * 100));
+            printf("actual: %9lu, estimated: %9lu, error: %+7.2f%%\n",
+                   (long unsigned int)i, (long unsigned int)esti, (double)(esti - i) / i * 100);
         }
     }
     printf("\n");
@@ -162,8 +161,8 @@ TEST(HyperloglogCounting, RawMerge)
     EXPECT_EQ(rc, 0);
     esti = hll_cnt_card(ctx);
     EXPECT_GT(esti, 0);
-    printf("actual:40000, estimated: %lu, error: %.2f%%\n",
-           (long unsigned int)esti, fabs((double)(esti - 40000) / 40000 * 100));
+    printf("actual:40000, estimated: %9lu, error: %+7.2f%%\n",
+           (long unsigned int)esti, (double)(esti - 40000) / 40000 * 100);
 
     rc = hll_cnt_fini(tbm2);
     EXPECT_EQ(rc, 0);
@@ -218,8 +217,8 @@ TEST(HyperloglogCounting, Merge)
     EXPECT_EQ(rc, 0);
     esti = hll_cnt_card(ctx);
     EXPECT_GT(esti, 0);
-    printf("actual:40000, estimated: %lu, error: %.2f%%\n",
-           (long unsigned int)esti, fabs((double)(esti - 40000) / 40000 * 100));
+    printf("actual:40000, estimated: %9lu, error: %+7.2f%%\n",
+           (long unsigned int)esti, (double)(esti - 40000) / 40000 * 100);
 
     rc = hll_cnt_fini(tbm2);
     EXPECT_EQ(rc, 0);
