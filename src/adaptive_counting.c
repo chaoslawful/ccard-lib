@@ -177,10 +177,10 @@ int64_t adp_cnt_card(adp_cnt_ctx_t *ctx)
     }
 
     if (B >= B_s) {
+        ctx->err = CCARD_OK;
         return (int64_t)round((-(double)ctx->m) * log(B));
     }
 
-    ctx->err = CCARD_OK;
     return adp_cnt_card_loglog(ctx);
 }
 
