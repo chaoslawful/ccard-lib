@@ -20,7 +20,11 @@ struct adp_cnt_ctx_s {
 
 /**
  * Gamma function computed using SciLab
- * ((gamma(-(m.^(-1))).* ( (1-2.^(m.^(-1)))./log(2) )).^(-m)).*m
+ *
+ *  ((gamma(-(m.^(-1))).* ( (1-2.^(m.^(-1)))./log(2) )).^(-m)).*m
+ *
+ * which is a_m in page 5 of the paper "LogLog Counting of Large
+ * Cardinalities".
  * */
 static const double alpha[] = {
     0,

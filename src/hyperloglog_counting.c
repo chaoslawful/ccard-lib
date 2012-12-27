@@ -67,6 +67,39 @@ hll_cnt_ctx_t *hll_cnt_raw_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
     ctx->m = m;
     ctx->hf = hf;
 
+    /*
+     * Description of the following magical numbers:
+     *
+     * In the HyperLogLog paper page 12-13, alphaMM is a_m*m^2, where:
+     *
+     *  a_m := 1/(m*J_0(m))
+     *
+     * Here J_s(m) is not the first-kind Bessel function, but defined as the
+     * value of a special integrals:
+     *
+     *  J_s(m) := integral(u^s*f(u)^m, u=0..inf)
+     *
+     * where f(u) := log_2((2+u)/(1+u))
+     *
+     * After some deductions, we know that J_0(m) can be estimated by:
+     *
+     *  J_0(m) ~= 2*ln(2)/m*(1+(3*ln(2)-1)/m)
+     *
+     * As 1/(2*ln(2)) ~= 0.72135, 3*ln(2)-1 ~= 1.0794, thus:
+     *
+     *  a_m ~= 0.72135/(1+1.0794/m)
+     *
+     * When log_2(m)={4,5,6}, the corresponding a_m will be:
+     *
+     *  a_16 ~= 0.72135/(1+1.0794/16) = 0.67576
+     *  a_32 ~= 0.72135/(1+1.0794/32) = 0.69781
+     *  a_64 ~= 0.72135/(1+1.0794/64) = 0.70939
+     *
+     * There're small errors between calculated and actually used values,
+     * because stream-lib copied those values from the pseudo code in page 14
+     * directly. We had to keep compatibility with stream-lib so can't correct
+     * these values.
+     **/
     switch (log2m) {
         case 4:
             ctx->alphaMM = 0.673 * m * m;
@@ -123,6 +156,11 @@ int64_t hll_cnt_card(hll_cnt_ctx_t *ctx)
     estimate = ctx->alphaMM * (1 / sum);
 
     if (estimate <= (5.0 / 2.0) * ctx->m) {
+        /*
+         * Small range correction:
+         * Empty buckets may be too many, using linear counting estimator
+         * instead.
+         * */
         for (z = 0; z < ctx->m; z++) {
             if (ctx->M[z] == 0) {
                 zeros++;
@@ -130,8 +168,10 @@ int64_t hll_cnt_card(hll_cnt_ctx_t *ctx)
         }
         return (int64_t)round(ctx->m * log(ctx->m / zeros));
     } else if (estimate <= (1.0 / 30.0) * POW_2_32) {
+        /* Intermediate range - no correction */
         return (int64_t)round(estimate);
     } else {
+        /* Large range correction */
         return (int64_t)round((NEGATIVE_POW_2_32 * log(1.0 - (estimate / POW_2_32))));
     }
 }
