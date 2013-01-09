@@ -284,5 +284,53 @@ TEST(AdaptiveCounting, Merge)
     EXPECT_EQ(rc, 0);
 }
 
+/**
+ * Do some statistics on the bitmap buckets
+ * */
+TEST(AdaptiveCounting, BucketStats)
+{
+    int rc;
+    int64_t i, esti;
+    uint32_t len;
+    uint8_t *bytes;
+    int k = 13;
+    adp_cnt_ctx_t *ctx = adp_cnt_init(NULL, k, CCARD_HASH_MURMUR);
+    EXPECT_NE(ctx, (adp_cnt_ctx_t *)NULL);
+    for(i = 1; i <= 10000L; i++) {
+        rc = adp_cnt_offer(ctx, &i, sizeof(i));
+        EXPECT_GE(rc, 0);
+        if (i % 100 == 0) {
+            int ucnt = 0;
+            int exp_size;
+            esti = adp_cnt_card(ctx);
+            EXPECT_GT(esti, 0);
+
+            // Count used buckets in bitmap
+            rc = adp_cnt_get_raw_bytes(ctx, NULL, &len);
+            EXPECT_EQ(rc, 0);
+            bytes = (uint8_t *)calloc(len, 1);
+            rc = adp_cnt_get_raw_bytes(ctx, bytes, &len);
+            EXPECT_EQ(rc, 0);
+            for(int j = 0; j < (int)len; j++) {
+                if(bytes[j] != 0) {
+                    ucnt++;
+                }
+            }
+
+            // Calculate sparse storage costs: u*(log2(m)/8+1)
+            exp_size = ((int)(k / 8.0 + 0.5) + 1) * ucnt;
+            printf("actual: %6lu, estimated: %6lu, error: %+6.2f%%, "\
+                   "used buckets: %6d, used bucket ratio: %+6.2f%%, "\
+                   "expect sparse storage: %6d, expect bmp ratio: %+6.2f%%\n",
+                   (long unsigned int)i, (long unsigned int)esti,
+                   (double)(esti - i) / i * 100,
+                   ucnt, (double)ucnt / len * 100,
+                   exp_size, (double)exp_size / len * 100);
+        }
+    }
+    rc = adp_cnt_fini(ctx);
+    EXPECT_EQ(rc, 0);
+}
+
 // vi:ft=c ts=4 sw=4 fdm=marker et
 
