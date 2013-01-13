@@ -94,8 +94,8 @@ The implemention refers [stream-lib](https://github.com/clearspring/stream-lib).
 When using 2^16 (64k) bitmap, estimate result as follow:
 
 	Linear Counting with Murmurhash:
-	actual: 50000, estimated: 50062, error: 0.12%
-	actual: 100000, estimated: 99924, error: 0.08%
+	actual: 50000,  estimated: 50062,  error: 0.12%
+	actual: 100000, estimated: 99924,  error: 0.08%
 	actual: 150000, estimated: 149865, error: 0.09%
 	actual: 200000, estimated: 199916, error: 0.04%
 	actual: 250000, estimated: 250123, error: 0.05%
@@ -106,8 +106,8 @@ When using 2^16 (64k) bitmap, estimate result as follow:
 	actual: 500000, estimated: 500065, error: 0.01%
 
 	Linear Counting with Lookup3hash:
-	actual: 50000, estimated: 49835, error: 0.33%
-	actual: 100000, estimated: 99461, error: 0.54%
+	actual: 50000,  estimated: 49835,  error: 0.33%
+	actual: 100000, estimated: 99461,  error: 0.54%
 	actual: 150000, estimated: 149006, error: 0.66%
 	actual: 200000, estimated: 198501, error: 0.75%
 	actual: 250000, estimated: 248365, error: 0.65%
@@ -118,7 +118,7 @@ When using 2^16 (64k) bitmap, estimate result as follow:
 	actual: 500000, estimated: 495944, error: 0.81%
 
 	Hyperloglog Counting with Murmurhash:
-	actual: 50000, estimated: 50015, error: 0.03%
+	actual: 50000,  estimated: 50015,  error: 0.03%
 	actual: 100000, estimated: 100048, error: 0.05%
 	actual: 150000, estimated: 149709, error: 0.19%
 	actual: 200000, estimated: 201595, error: 0.80%
@@ -130,8 +130,8 @@ When using 2^16 (64k) bitmap, estimate result as follow:
 	actual: 500000, estimated: 498330, error: 0.33%
 
 	Hyperloglog Counting with Lookup3hash:
-	actual: 50000, estimated: 49628, error: 0.74%
-	actual: 100000, estimated: 99357, error: 0.64%
+	actual: 50000,  estimated: 49628,  error: 0.74%
+	actual: 100000, estimated: 99357,  error: 0.64%
 	actual: 150000, estimated: 148880, error: 0.75%
 	actual: 200000, estimated: 200475, error: 0.24%
 	actual: 250000, estimated: 249362, error: 0.26%
@@ -142,7 +142,7 @@ When using 2^16 (64k) bitmap, estimate result as follow:
 	actual: 500000, estimated: 498183, error: 0.36%
 
 	Adaptive Counting with Murmurhash:
-	actual: 50000, estimated: 50015, error: 0.03%
+	actual: 50000,  estimated: 50015,  error: 0.03%
 	actual: 100000, estimated: 100048, error: 0.05%
 	actual: 150000, estimated: 149709, error: 0.19%
 	actual: 200000, estimated: 201059, error: 0.53%
@@ -154,8 +154,8 @@ When using 2^16 (64k) bitmap, estimate result as follow:
 	actual: 500000, estimated: 500977, error: 0.20%
 
 	Adaptive Counting with Lookup3hash:
-	actual: 50000, estimated: 49628, error: 0.74%
-	actual: 100000, estimated: 99357, error: 0.64%
+	actual: 50000,  estimated: 49628,  error: 0.74%
+	actual: 100000, estimated: 99357,  error: 0.64%
 	actual: 150000, estimated: 148880, error: 0.75%
 	actual: 200000, estimated: 199895, error: 0.05%
 	actual: 250000, estimated: 249563, error: 0.17%
@@ -166,7 +166,7 @@ When using 2^16 (64k) bitmap, estimate result as follow:
 	actual: 500000, estimated: 499516, error: 0.10%
 
 	Loglog Counting with Murmurhash:
-	actual: 50000, estimated: 59857, error: 19.71%
+	actual: 50000,  estimated: 59857,  error: 19.71%
 	actual: 100000, estimated: 103108, error: 3.11%
 	actual: 150000, estimated: 150917, error: 0.61%
 	actual: 200000, estimated: 201059, error: 0.53%
@@ -178,7 +178,7 @@ When using 2^16 (64k) bitmap, estimate result as follow:
 	actual: 500000, estimated: 500977, error: 0.20%
 
 	Loglog Counting with Lookup3hash:
-	actual: 50000, estimated: 59870, error: 19.74%
+	actual: 50000,  estimated: 59870,  error: 19.74%
 	actual: 100000, estimated: 103044, error: 3.04%
 	actual: 150000, estimated: 150435, error: 0.29%
 	actual: 200000, estimated: 199895, error: 0.05%
@@ -188,4 +188,3 @@ When using 2^16 (64k) bitmap, estimate result as follow:
 	actual: 400000, estimated: 399266, error: 0.18%
 	actual: 450000, estimated: 450196, error: 0.04%
 	actual: 500000, estimated: 499516, error: 0.10%
-
