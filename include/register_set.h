@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 #ifdef __cplusplus
-extern          "C" {
+extern "C" {
 #endif
 
     typedef struct reg_set_s {
@@ -80,5 +80,6 @@ extern          "C" {
 
 #endif
 
-// vi:ft=c ts=4 sw=4 fdm=marker et
+/* vi:ft=c ts=4 sw=4 fdm=marker et
+ * */
 

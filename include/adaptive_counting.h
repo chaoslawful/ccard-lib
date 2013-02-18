@@ -4,7 +4,7 @@
 #include "ccard_common.h"
 
 #ifdef __cplusplus
-extern          "C" {
+extern "C" {
 #endif
 
     /**
@@ -15,10 +15,12 @@ extern          "C" {
     /**
      * Initialize adaptive counting context with optional raw bitmap.
      *
-     * @param[in] buf Pointer to the raw bitmap (no header). NULL if there's none.
+     * @param[in] buf Pointer to the raw bitmap (no header). NULL if there's
+     * none.
      * @param[in] len_or_k The length of the bitmap if buf is not NULL;
      * otherwise it's the base-2 logarithm of the bitmap length (no header).
-     * @param[in] hf Hash function that be applied to elements.
+     * @param[in] opt Additional options or'd together. Including hash function
+     * that be applied to elements and bitmap storage format.
      *
      * @retval not-NULL An initialized context to be used with the rest of
      * methods.
@@ -27,15 +29,18 @@ extern          "C" {
      * @see adp_cnt_fini, adp_cnt_init
      * */
     adp_cnt_ctx_t  *adp_cnt_raw_init(const void *obuf, uint32_t len_or_k,
-                                     uint8_t hf);
+                                     uint8_t opt);
 
     /**
      * Initialize adaptive counting context with optional serialized bitmap.
      *
-     * @param[in] buf Pointer to the serialized bitmap (with 3 bytes header). NULL if there's none.
+     * @param[in] buf Pointer to the serialized bitmap (with 3 bytes header).
+     * NULL if there's none.
      * @param[in] len_or_k The length of the bitmap if buf is not NULL;
-     * otherwise it's the base-2 logarithm of the bitmap length (exclude 3 bytes header).
-     * @param[in] hf Hash function that be applied to elements.
+     * otherwise it's the base-2 logarithm of the bitmap length (exclude 3
+     * bytes header).
+     * @param[in] opt Additional options or'd together. Including hash function
+     * that be applied to elements and bitmap storage format.
      *
      * @retval not-NULL An initialized context to be used with the rest of
      * methods.
@@ -44,10 +49,11 @@ extern          "C" {
      * @see adp_cnt_fini, adp_cnt_raw_init
      * */
     adp_cnt_ctx_t  *adp_cnt_init(const void *obuf, uint32_t len_or_k,
-                                 uint8_t hf);
+                                 uint8_t opt);
 
     /**
-     * Retrieve the cardinality calculated from bitmap in the context using LogLog Counting.
+     * Retrieve the cardinality calculated from bitmap in the context using
+     * LogLog Counting.
      *
      * @param[in] ctx Pointer to the context.
      *
@@ -60,7 +66,8 @@ extern          "C" {
     int64_t         adp_cnt_card_loglog(adp_cnt_ctx_t *ctx);
 
     /**
-     * Retrieve the cardinality calculated from bitmap in the context using Adaptive Counting.
+     * Retrieve the cardinality calculated from bitmap in the context using
+     * Adaptive Counting.
      *
      * @param[in] ctx Pointer to the context.
      *
@@ -172,8 +179,8 @@ extern          "C" {
      * }
      * @endcode
      *
-     * @note All bitmaps to be merged must be of the same length with the bitmap
-     * in current context, otherwise error will be returned!
+     * @note All bitmaps to be merged must be of the same length with the
+     * bitmap in current context, otherwise error will be returned!
      *
      * @param[in,out] ctx Pointer to the context merging to.
      * @param[in] buf Pointer to the first bitmap to be merged.
@@ -201,8 +208,8 @@ extern          "C" {
      * }
      * @endcode
      *
-     * @note All bitmaps to be merged must be of the same length with the bitmap
-     * in current context, otherwise error will be returned!
+     * @note All bitmaps to be merged must be of the same length with the
+     * bitmap in current context, otherwise error will be returned!
      *
      * @param[in,out] ctx Pointer to the context merging to.
      * @param[in] buf Pointer to the first bitmap to be merged.
@@ -264,5 +271,6 @@ extern          "C" {
 
 #endif
 
-// vi:ft=c ts=4 sw=4 fdm=marker et
+/* vi:ft=c ts=4 sw=4 fdm=marker et
+ * */
 

@@ -4,12 +4,14 @@
 struct adp_cnt_ctx_s {
     int err;
     uint8_t k;
-    uint32_t m;
+    uint8_t hf;
+    uint8_t sidx_len;
     double Ca;
+    uint32_t m;
     uint32_t Rsum;
     uint32_t b_e;
-    uint8_t hf;
-    uint8_t M[1];
+    uint32_t bmp_len;
+    uint8_t *M;
 };
 %}
 

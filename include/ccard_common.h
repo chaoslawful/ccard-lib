@@ -2,18 +2,19 @@
 #define CCARD_COMMON_H__
 
 #include <stdint.h>
+#include "sparse_bitmap.h"
 
 #ifdef __cplusplus
-extern          "C" {
+extern "C" {
 #endif
 
     /**
      * Predefined error codes
      * */
     enum {
-        CCARD_OK = 0,        ///< No error
-        CCARD_ERR_INVALID_CTX = -1, ///< Invalid algorihm context
-        CCARD_ERR_MERGE_FAILED = -2,    ///< Merge failed
+        CCARD_OK = 0,                   /**< No error */
+        CCARD_ERR_INVALID_CTX = -1,     /**< Invalid algorihm context */
+        CCARD_ERR_MERGE_FAILED = -2,    /**< Merge failed */
         CCARD_ERR_PLACEHOLDER
     };
 
@@ -40,38 +41,38 @@ extern          "C" {
      * C-card algorithm definition
      * */
     typedef struct ccard_algo_s {
-        /// Allocate algorithm ctx with optional raw data
+        /** Allocate algorithm ctx with optional raw data */
         void           *(*raw_init) (const void *buf, uint32_t len_or_hint,
-                                     uint8_t hf);
-        /// Allocate algorithm ctx with optional external data
+                                     uint8_t opt);
+        /** Allocate algorithm ctx with optional external data */
         void           *(*init) (const void *buf, uint32_t len_or_hint,
-                                 uint8_t hf);
-        /// Get cardinality from algorithm ctx
+                                 uint8_t opt);
+        /** Get cardinality from algorithm ctx */
         int64_t         (*card) (void *ctx);
-        /// Offer a new item to be counted
+        /** Offer a new item to be counted */
         int             (*offer) (void *ctx, const void *buf,
                                   uint32_t len);
-        /// Reset count to zero
+        /** Reset count to zero */
         int             (*reset) (void *ctx);
-        /// Get raw bytes of the algorithm state
+        /** Get raw bytes of the algorithm state */
         int             (*get_raw_bytes) (void *ctx, void *buf,
                                           uint32_t *len);
-        /// Get serialized bytes of the algorithm state
+        /** Get serialized bytes of the algorithm state */
         int             (*get_bytes) (void *ctx, void *buf,
                                       uint32_t *len);
-        /// Merge several algorithm ctx and combine their counts
+        /** Merge several algorithm ctx and combine their counts */
         int             (*merge) (void *ctx, void *tbm, ...);
-        /// Merge several raw bytes and combine their counts
+        /** Merge several raw bytes and combine their counts */
         int             (*merge_raw_bytes) (void *ctx, const void *buf,
                                             uint32_t len, ...);
-        /// Merge several serialized bytes and combine their counts
+        /** Merge several serialized bytes and combine their counts */
         int             (*merge_bytes) (void *ctx, const void *buf,
                                         uint32_t len, ...);
-        /// Deallocate algorithm ctx
+        /** Deallocate algorithm ctx */
         int             (*fini) (void *ctx);
-        /// Get error code from algorithm ctx
+        /** Get error code from algorithm ctx */
         int             (*errnum) (void *ctx);
-        /// Convert error code to human-friendly messages
+        /** Convert error code to human-friendly messages */
         const char     *(*errstr) (int errn);
     } ccard_algo_t;
 
@@ -81,5 +82,6 @@ extern          "C" {
 
 #endif
 
-// vi:ft=c ts=4 sw=4 fdm=marker et
+/* vi:ft=c ts=4 sw=4 fdm=marker et
+ * */
 

@@ -4,7 +4,7 @@
 #include "ccard_common.h"
 
 #ifdef __cplusplus
-extern          "C" {
+extern "C" {
 #endif
 
     /**
@@ -47,7 +47,8 @@ extern          "C" {
                                  uint8_t hf);
 
     /**
-     * Retrieve the cardinality calculated from bitmap in the context using Hyperloglog Counting.
+     * Retrieve the cardinality calculated from bitmap in the context using
+     * Hyperloglog Counting.
      *
      * @param[in] ctx Pointer to the context.
      *
@@ -207,7 +208,8 @@ extern          "C" {
                                         ...);
 
     /**
-     * Finalize and release resources of the given hyperloglog counting context.
+     * Finalize and release resources of the given hyperloglog counting
+     * context.
      *
      * @param[in] ctx Pointer to the context to release.
      *
@@ -252,5 +254,6 @@ extern          "C" {
 
 #endif
 
-// vi:ft=c ts=4 sw=4 fdm=marker et
+/* vi:ft=c ts=4 sw=4 fdm=marker et
+ * */
 

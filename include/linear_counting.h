@@ -4,7 +4,7 @@
 #include "ccard_common.h"
 
 #ifdef __cplusplus
-extern          "C" {
+extern "C" {
 #endif
 
     /**
@@ -15,7 +15,8 @@ extern          "C" {
     /**
      * Initialize linear counting context with optional raw bitmap.
      *
-     * @param[in] buf Pointer to the raw bitmap (no header). NULL if there's none.
+     * @param[in] buf Pointer to the raw bitmap (no header). NULL if there's
+     * none.
      * @param[in] len_or_k The length of the bitmap if buf is not NULL;
      * otherwise it's the base-2 logarithm of the bitmap length (no header).
      * @param[in] hf Hash function that be applied to elements.
@@ -32,9 +33,11 @@ extern          "C" {
     /**
      * Initialize linear counting context with optional serialized bitmap.
      *
-     * @param[in] buf Pointer to the serialized bitmap (with 3 bytes header). NULL if there's none.
+     * @param[in] buf Pointer to the serialized bitmap (with 3 bytes header).
+     * NULL if there's none.
      * @param[in] len_or_k The length of the bitmap if buf is not NULL;
-     * otherwise it's the base-2 logarithm of the bitmap length (exclude 3 bytes header).
+     * otherwise it's the base-2 logarithm of the bitmap length (exclude 3
+     * bytes header).
      * @param[in] hf Hash function that be applied to elements.
      *
      * @retval not-NULL An initialized context to be used with the rest of
@@ -47,7 +50,8 @@ extern          "C" {
                                  uint8_t hf);
 
     /**
-     * Retrieve the cardinality calculated from bitmap in the context using Linear Counting.
+     * Retrieve the cardinality calculated from bitmap in the context using
+     * Linear Counting.
      *
      * @param[in] ctx Pointer to the context.
      *
@@ -252,5 +256,6 @@ extern          "C" {
 
 #endif
 
-// vi:ft=c ts=4 sw=4 fdm=marker et
+/* vi:ft=c ts=4 sw=4 fdm=marker et
+ * */
 
