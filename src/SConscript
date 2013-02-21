@@ -1,8 +1,5 @@
 import os
 
-def SymLink(target, source, env):
-    os.symlink(os.path.abspath(str(source[0])), os.path.abspath(str(target[0])))
-
 ver = '0.1'
 name = 'ccard-lib'
 libdir = '$PREFIX/usr/lib/'
@@ -12,6 +9,7 @@ env = Environment(
         CPPPATH = ["#/include"],
         CCFLAGS = ["-Wall", "-Wextra", "-Werror", "-g3", "-std=c99"]
         )
+# to comply with travis's compiler setting
 env["CC"] = os.getenv("CC") or env["CC"]
 env["CXX"] = os.getenv("CXX") or env["CXX"]
 env["ENV"].update(x for x in os.environ.items() if x[0].startswith("CCC_"))
@@ -30,10 +28,14 @@ dl_new = env.Command("../" + str(dl[0]), dl, Move("$TARGET", "$SOURCE"))
 env.Install(libdir, [sl_new, dl_new])
 
 # make version-less link to static and shared libraries
-env.Command("../"+slname, sl_new, SymLink)
-env.Command("../"+dlname, dl_new, SymLink)
-env.Command(libdir+slname, libdir+str(sl[0]), SymLink)
-env.Command(libdir+dlname, libdir+str(dl[0]), SymLink)
+cmd_ln_static = 'ln -s '+str(sl[0])+' '+slname
+cmd_ln_dso = 'ln -s '+str(dl[0])+' '+dlname
+
+env.Command("../"+slname, sl_new, cmd_ln_static, chdir=1)
+env.Command("../"+dlname, dl_new, cmd_ln_dso, chdir=1)
+
+env.Command(libdir+slname, libdir+str(sl[0]), cmd_ln_static, chdir=1)
+env.Command(libdir+dlname, libdir+str(dl[0]), cmd_ln_dso, chdir=1)
 
 # make 'install' the alias of library directory target
 env.Alias('install', libdir)
