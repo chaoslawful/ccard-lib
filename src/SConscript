@@ -5,9 +5,10 @@ def SymLink(target, source, env):
 
 ver = '0.1'
 name = 'ccard-lib'
-libdir = '/usr/local/lib/'
+libdir = '$PREFIX/usr/lib/'
 
 env = Environment(
+        PREFIX = GetOption('prefix'),
         CPPPATH = ["#/include"],
         CCFLAGS = ["-Wall", "-Wextra", "-Werror", "-g3", "-std=c99"]
         )

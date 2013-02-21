@@ -1,3 +1,10 @@
+AddOption('--prefix',
+        dest='prefix',
+        nargs=1, type='string',
+        action='store',
+        metavar='DIR',
+        help='Installation prefix')
+
 # build C source
 SConscript('src/SConscript')
 

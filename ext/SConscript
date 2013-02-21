@@ -3,6 +3,7 @@ import os
 import commands
 
 env = Environment(
+        PREFIX = GetOption('prefix'),
         ENV = {'PATH' : os.environ['PATH']},
         SWIGFLAGS=['-php'],
         SHLIBPREFIX=""
@@ -12,7 +13,7 @@ env["CXX"] = os.getenv("CXX") or env["CXX"]
 env["ENV"].update(x for x in os.environ.items() if x[0].startswith("CCC_"))
 
 env.ParseConfig("php-config --includes")
-phpLibExtDir = commands.getoutput("php-config --extension-dir")
+phpLibExtDir = '$PREFIX/' + commands.getoutput("php-config --extension-dir")
 
 swigSl = env.SharedLibrary(
         '../php_card.so',
