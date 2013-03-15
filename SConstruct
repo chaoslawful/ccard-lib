@@ -10,7 +10,8 @@ SConscript('src/SConscript')
 
 #############################################################
 # swig for php make and install
-SConscript('ext/SConscript')
+if "install-php" in COMMAND_LINE_TARGETS:
+    SConscript('ext/SConscript')
 
 #############################################################
 # build unit-test
