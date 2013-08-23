@@ -74,5 +74,59 @@ uint32_t murmurhash_long(uint64_t data)
     return h;
 }
 
+uint64_t murmurhash64(void *buf, uint32_t len, uint32_t seed) {
+    uint8_t *data = (uint8_t *)buf;
+    uint64_t m = 0xc6a4a7935bd1e995L;
+    uint32_t r = 47;
+    uint64_t h = (seed & 0xffffffffl) ^ (len * m);
+    uint32_t len8 = len / 8;
+    uint32_t i;
+
+    for (i = 0; i < len8; i++)
+    {
+        uint32_t i8 = i * 8;
+        uint64_t k = ((uint64_t) data[i8 + 0] & 0xff) + (((uint64_t) data[i8 + 1] & 0xff) << 8) 
+            + (((uint64_t) data[i8 + 2] & 0xff) << 16) + (((uint64_t) data[i8 + 3] & 0xff) << 24)
+            + (((uint64_t) data[i8 + 4] & 0xff) << 32) + (((uint64_t) data[i8 + 5] & 0xff) << 40)
+            + (((uint64_t) data[i8 + 6] & 0xff) << 48) + (((uint64_t) data[i8 + 7] & 0xff) << 56);
+
+        k *= m;
+        k ^= k >> r;
+        k *= m;
+
+        h ^= k;
+        h *= m;
+    }
+
+    switch (len % 8)
+    {
+        case 7:
+            h ^= (uint64_t) (data[(len & ~7) + 6] & 0xff) << 48;
+        case 6:
+            h ^= (uint64_t) (data[(len & ~7) + 5] & 0xff) << 40;
+        case 5:
+            h ^= (uint64_t) (data[(len & ~7) + 4] & 0xff) << 32;
+        case 4:
+            h ^= (uint64_t) (data[(len & ~7) + 3] & 0xff) << 24;
+        case 3:
+            h ^= (uint64_t) (data[(len & ~7) + 2] & 0xff) << 16;
+        case 2:
+            h ^= (uint64_t) (data[(len & ~7) + 1] & 0xff) << 8;
+        case 1:
+            h ^= (uint64_t) (data[len & ~7] & 0xff);
+            h *= m;
+    };
+
+    h ^= h >> r;
+    h *= m;
+    h ^= h >> r;
+
+    return h;
+}
+
+uint64_t murmurhash64_no_seed(void *buf, uint32_t len) {
+    return murmurhash64(buf, len, 0xe17a1465);
+}
+
 // vi:ft=c ts=4 sw=4 fdm=marker et
 

@@ -29,4 +29,18 @@ TEST(MurmurhashTest, Long)
     EXPECT_EQ(148129653lu, murmurhash_long(longint));
 }
 
+/**
+ * Tests Murmurhash64 with byte[] buffer.
+ *
+ * <p>
+ * When using java stream-lib the hash code (with sign) of "hello world" is -779442749388864765
+ * </p>
+ * */
+TEST(Murmurhash64Test, Buffer)
+{
+    char *s = (char *)"hello world";
+
+    EXPECT_EQ(-779442749388864765l, (int64_t)murmurhash64_no_seed((void *)s, strlen(s)));
+}
+
 // vi:ft=c ts=4 sw=4 fdm=marker et
