@@ -5,7 +5,6 @@
 #include <math.h>
 #include "ccard_common.h"
 #include "murmurhash.h"
-#include "lookup3hash.h"
 #include "hyperloglogplus_counting.h"
 
 struct hllp_cnt_ctx_s {
@@ -88,14 +87,14 @@ double biasData[][201] = {
 
 /*
  * Use k-NN to select estimate bias
- * k = 6
+ * According to paper, set k = 6
  */
 static double compute_bias(uint64_t estimate, uint8_t p) {
     double *rawEstimateVector, *biasVector;
     uint32_t i, j, len;
     double bias = 0.0;
-    uint32_t idx[6] = {};
-    double minDists[6] = {};
+    uint32_t idx[6];
+    double minDists[6] = {0.0, 0.0, 0.0, 0.0, 0.0};
 
     if (p < 4 || p > 18) {
         return 0.0;
@@ -104,7 +103,9 @@ static double compute_bias(uint64_t estimate, uint8_t p) {
     rawEstimateVector = rawEstimateData[p - 4];
     biasVector = biasData[p - 4];
 
+    // The max length of bias correction data vector is 201
     len = 201;
+    // Get bias correction data vector length 
     for (i = 0; i < 201; i++) {
         if (rawEstimateVector[i] == 0.0) {
             len = i;
@@ -112,6 +113,10 @@ static double compute_bias(uint64_t estimate, uint8_t p) {
         }
     }
 
+    // Compute distances of estimate value and each data in raw estimate vector
+    // and get 6 smallest distance
+    //
+    // The distance is defined as the square of two number's difference
     for (i = 0; i < len; i++) {
         double distance = pow(estimate - rawEstimateVector[i], 2);
         for (j = 0; j < 6; j++) {
@@ -123,11 +128,13 @@ static double compute_bias(uint64_t estimate, uint8_t p) {
         }
     }
 
+    // Compute bias use k-NN
     for (i = 0; i < 6; i++) {
         bias += biasVector[idx[i]];
     }
+    bias /= 6;
 
-    return bias / 6;
+    return bias;
 }
 
 static uint8_t num_of_trail_zeros(uint64_t i)
@@ -272,6 +279,7 @@ int64_t hllp_cnt_card(hllp_cnt_ctx_t *ctx)
         return -1;
     }
 
+    // Bias correction is suitable for 2^4 to 2^18 buckets
     if (ctx->log2m < 4 || ctx->log2m > 18) {
         ctx->err = CCARD_ERR_INVALID_ARGUMENT;
         return -1;
@@ -301,9 +309,11 @@ int64_t hllp_cnt_card(hllp_cnt_ctx_t *ctx)
     }
     
     if (estimateP <= thresholdData[ctx->log2m - 4]) {
+        // Use Linear Counting
         return (int64_t)estimateP;
     }
 
+    // Use Bias-Correncted HyperLogLog Counting
     return (int64_t)estimate;
 }
 
