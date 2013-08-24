@@ -15,6 +15,7 @@ extern "C" {
         CCARD_OK = 0,                   /**< No error */
         CCARD_ERR_INVALID_CTX = -1,     /**< Invalid algorihm context */
         CCARD_ERR_MERGE_FAILED = -2,    /**< Merge failed */
+        CCARD_ERR_INVALID_ARGUMENT = -3,    /**< Invalid argument */
         CCARD_ERR_PLACEHOLDER
     };
 
@@ -25,6 +26,7 @@ extern "C" {
         CCARD_ALGO_ADAPTIVE = 1,
         CCARD_ALGO_HYPERLOGLOG = 2,
         CCARD_ALGO_LINEAR = 3,
+        CCARD_ALGO_HYPERLOGLOGPLUS = 4,
         CCARD_ALGO_PLACEHOLDER
     };
 
@@ -34,6 +36,7 @@ extern "C" {
     enum {
         CCARD_HASH_MURMUR = 1,
         CCARD_HASH_LOOKUP3 = 2,
+        CCARD_HASH_MURMUR64 = 3,
         CCARD_HASH_PLACEHOLDER
     };
 
