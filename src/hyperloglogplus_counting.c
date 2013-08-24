@@ -280,7 +280,7 @@ int64_t hllp_cnt_card(hllp_cnt_ctx_t *ctx)
     ctx->err = CCARD_OK;
 
     for (j = 0; j < ctx->m; j++) {
-        sum += pow(2, (-1 * ctx->M[j]));
+        sum += 1.0 / (1 << ctx->M[j]);
     }
 
     estimate = ctx->alphaMM * (1 / sum);
