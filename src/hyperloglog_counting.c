@@ -195,6 +195,10 @@ int hll_cnt_offer(hll_cnt_ctx_t *ctx, const void *buf, uint32_t len)
             x = lookup3ycs64_2((const char *)buf);
             hl = 64;
             break;
+        case CCARD_HASH_MURMUR64:
+            x = (uint64_t)murmurhash64_no_seed((void *)buf, len);
+            hl = 64;
+            break;
         default:
             /* default to use murmurhash function */
             x = (uint64_t)murmurhash((void *)buf, len, -1);
