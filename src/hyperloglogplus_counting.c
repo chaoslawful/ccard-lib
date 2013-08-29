@@ -94,7 +94,7 @@ static double compute_bias(uint64_t estimate, uint8_t p) {
     uint32_t i, j, len;
     double bias = 0.0;
     uint32_t idx[6];
-    double minDists[6] = {0.0, 0.0, 0.0, 0.0, 0.0};
+    double minDists[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
     if (p < 4 || p > 18) {
         return 0.0;
@@ -119,11 +119,16 @@ static double compute_bias(uint64_t estimate, uint8_t p) {
     // The distance is defined as the square of two number's difference
     for (i = 0; i < len; i++) {
         double distance = pow(estimate - rawEstimateVector[i], 2);
-        for (j = 0; j < 6; j++) {
-            if (minDists[j] == 0.0 || distance < minDists[j]) {
-                minDists[j] = distance;
-                idx[j] = i;
-                break;
+        if (i < 6) {
+            minDists[i] = distance;
+            idx[i] = i;
+        } else {
+            for (j = 0; j < 6; j++) {
+                if (distance < minDists[j]) {
+                    minDists[j] = distance;
+                    idx[j] = i;
+                    break;
+                }
             }
         }
     }
