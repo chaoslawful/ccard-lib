@@ -64,7 +64,9 @@ ccard-lib.
 Source codes should always be formatted before committing by running script
 `util/indent-src` in top-dir. It utilized
 [astyle](http://astyle.sourceforge.net/) to do the job, so you should install
-this tool first.
+this tool first. **Make sure you install astyle v2.03 or later**, as the
+indenting result differs from previous version ([see
+		here](http://astyle.sourceforge.net/news.html) for details)
 
 ## Reference
 
