@@ -70,7 +70,7 @@ extern "C" {
      * @see hllp_cnt_card, hllp_cnt_reset
      * */
     int             hllp_cnt_offer(hllp_cnt_ctx_t *ctx, const void *buf,
-                                  uint32_t len);
+                                   uint32_t len);
 
     /**
      * Reset bitmap in the context, effectively clear cardinality to zero.
@@ -98,7 +98,7 @@ extern "C" {
      * @see hllp_cnt_merge, hllp_cnt_merge_raw_bytes, hllp_cnt_get_bytes
      * */
     int             hllp_cnt_get_raw_bytes(hllp_cnt_ctx_t *ctx, void *buf,
-                                          uint32_t *len);
+                                           uint32_t *len);
 
     /**
      * Get the serialized bitmap or bitmap length from context.
@@ -114,7 +114,7 @@ extern "C" {
      * @see hllp_cnt_merge, hllp_cnt_merge_bytes, hllp_cnt_get_raw_bytes
      * */
     int             hllp_cnt_get_bytes(hllp_cnt_ctx_t *ctx, void *buf,
-                                      uint32_t *len);
+                                       uint32_t *len);
 
     /**
      * Merge several hyperloglogplus counting context into the current one,
@@ -141,7 +141,7 @@ extern "C" {
      * @see hllp_cnt_merge_bytes, hllp_cnt_get_bytes
      * */
     int             hllp_cnt_merge(hllp_cnt_ctx_t *ctx, hllp_cnt_ctx_t *tbm,
-                                  ...);
+                                   ...);
 
     /**
      * Merge several hyperloglogplus counting bitmap into the current context,
@@ -170,8 +170,8 @@ extern "C" {
      * @see hllp_cnt_merge, hllp_cnt_get_bytes, hllp_cnt_merge_bytes
      * */
     int             hllp_cnt_merge_raw_bytes(hllp_cnt_ctx_t *ctx,
-                                            const void *buf, uint32_t len,
-                                            ...);
+            const void *buf, uint32_t len,
+            ...);
 
     /**
      * Merge several hyperloglogplus counting bitmap into the current context,
@@ -200,8 +200,8 @@ extern "C" {
      * @see hllp_cnt_merge, hllp_cnt_get_bytes, hllp_cnt_merge_raw_bytes
      * */
     int             hllp_cnt_merge_bytes(hllp_cnt_ctx_t *ctx,
-                                        const void *buf, uint32_t len,
-                                        ...);
+                                         const void *buf, uint32_t len,
+                                         ...);
 
     /**
      * Finalize and release resources of the given hyperloglogplus counting

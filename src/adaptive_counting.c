@@ -796,7 +796,7 @@ adp_cnt_merge(adp_cnt_ctx_t *ctx, adp_cnt_ctx_t *tbm, ...)
             return -1;
         }
 
-        pbuf = (const uint8_t **)alloca(sizeof(const uint8_t *)*buf_cnt);
+        pbuf = (const uint8_t **)alloca(sizeof(const uint8_t *) * buf_cnt);
         plen = (uint32_t *)alloca(sizeof(uint32_t) * buf_cnt);
 
         /* initialize buffer array */
@@ -865,7 +865,7 @@ adp_cnt_merge_raw_bytes(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
             return -1;
         }
 
-        pbuf = (const uint8_t **)alloca(sizeof(const uint8_t *)*buf_cnt);
+        pbuf = (const uint8_t **)alloca(sizeof(const uint8_t *) * buf_cnt);
         plen = (uint32_t *)alloca(sizeof(uint32_t) * buf_cnt);
 
         /* initialize buffer array */
@@ -936,7 +936,7 @@ adp_cnt_merge_bytes(adp_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
             return -1;
         }
 
-        pbuf = (const uint8_t **)alloca(sizeof(const uint8_t *)*buf_cnt);
+        pbuf = (const uint8_t **)alloca(sizeof(const uint8_t *) * buf_cnt);
         plen = (uint32_t *)alloca(sizeof(uint32_t) * buf_cnt);
 
         /* initialize buffer array (strip headers) */

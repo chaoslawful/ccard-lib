@@ -89,7 +89,8 @@ double biasData[][201] = {
  * Use k-NN to select estimate bias
  * According to paper, set k = 6
  */
-static double compute_bias(uint64_t estimate, uint8_t p) {
+static double compute_bias(uint64_t estimate, uint8_t p)
+{
     double *rawEstimateVector, *biasVector;
     uint32_t i, j, len;
     double bias = 0.0;
@@ -105,7 +106,7 @@ static double compute_bias(uint64_t estimate, uint8_t p) {
 
     // The max length of bias correction data vector is 201
     len = 201;
-    // Get bias correction data vector length 
+    // Get bias correction data vector length
     for (i = 0; i < 201; i++) {
         if (rawEstimateVector[i] == 0.0) {
             len = i;
@@ -159,7 +160,8 @@ static uint8_t num_of_trail_zeros(uint64_t i)
     return n - (uint8_t)((i << 1) >> 63);
 }
 
-static uint8_t num_of_leading_zeros(uint64_t i) {
+static uint8_t num_of_leading_zeros(uint64_t i)
+{
     uint8_t n = 64;
 
     while (i != 0 && n > 0) {
@@ -312,7 +314,7 @@ int64_t hllp_cnt_card(hllp_cnt_ctx_t *ctx)
     } else {
         estimateP = estimate;
     }
-    
+
     if (estimateP <= thresholdData[ctx->log2m - 4]) {
         // Use Linear Counting
         return (int64_t)estimateP;
