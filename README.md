@@ -3,22 +3,22 @@
 
 ## Description
 
-C library for estimating cardinality in streams for 
-which it is infeasible to store all events in memory.
+C library for estimating cardinality in data streams, in which case it is
+infeasible to store all events in memory.
 
-This library implements a series of cardinality estimate algorithms such as
+This library implements a series of cardinality estimating algorithms such as
 Linear Counting, LogLog Counting, HyperLogLog Counting and Adaptive Counting.
-For more information about this algorithms please read the
+For more information about these algorithms please read the
 [Reference](#reference) section.
 
 ## Building
 
-Building ccard-lib needs the [scons](http://www.scons.org/). Please read [scons
+Building ccard-lib needs [scons](http://www.scons.org/). Please read [scons
 user guide](http://www.scons.org/doc/production/HTML/scons-user/index.html) for
 more information about it.
 
 Building PHP extension of ccard-lib needs [SWIG](http://www.swig.org/) to be
-installed. Running unit-tests need
+installed. Running unit-tests needs
 [googletest](http://code.google.com/p/googletest/) to be installed.
 
 ### Building as Library
@@ -33,39 +33,40 @@ You can also run unit-tests to make sure the library works as expected:
 
 	scons test
 
-Default the ccard-lib will be installed at "/usr/local/lib", if you want to
-change the install directory please replace the "libdir" that in SConsturc file
-by your target directory.
+By default ccard-lib will be installed at `/usr/local/lib`, if you want to
+change the install directory please replace the "libdir" setting in
+`SConsturct` file with your target directory.
 
 ### Building as PHP Extension
 
-The follow command will build ccard-lib as php extension:
+The following command will build and install card-lib PHP extension:
 
 	scons install-php
 
-We use [swig](http://www.swig.org) to generate php extension, please install it 
-before run this command. 
+[SWIG](http://www.swig.org) is used to generate PHP extension, please install
+it before run this command. 
 
 ### Uninstall
 
-If you want to uninstall ccard-lib from your system, use this commands:
+If you want to uninstall ccard-lib from your system, use the following
+commands:
 
 	scons -c install-php
 	scons -c install
 
 ## Examples
 
-Please see test cases in subdirectory
-[t/](https://github.com/chaoslawful/ccard-lib/tree/master/t) to know how to use
-ccard-lib. 
+See test-cases in subdirectory
+[t/](https://github.com/chaoslawful/ccard-lib/tree/master/t) to learn how to
+use ccard-lib.
 
 ## For Developers
 
 Source codes should always be formatted before committing by running script
 `util/indent-src` in top-dir. It utilized
-[astyle](http://astyle.sourceforge.net/) to do the job, so you should install
-this tool first. **Make sure you install astyle v2.03 or later**, as the
-indenting result differs from previous version ([see
+[astyle](http://astyle.sourceforge.net/) to do the job, so you probably want to
+install it first. **Make sure you install astyle v2.03 or later**, as the
+indenting result differs from previous versions ([see
 		here](http://astyle.sourceforge.net/news.html) for details)
 
 ## Reference
@@ -98,7 +99,8 @@ The implemention refers [stream-lib](https://github.com/clearspring/stream-lib).
 
 ## Experiment
 
-When using 2^16 (64k) bitmap, estimate result as follow:
+The following estimating results is calculated using bitmap with length of 2^16
+(64k) bytes:
 
 	Linear Counting with Murmurhash:
 	actual: 50000,  estimated: 50062,  error: 0.12%
