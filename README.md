@@ -25,13 +25,17 @@ installed. Running unit-tests needs
 
 Assuming you have scons installed, just build ccard-lib like this:
 
-    scons install
+```bash
+scons install
+```
 
 Scons will build and install ccard-lib to your system.
 
 You can also run unit-tests to make sure the library works as expected:
 
-	scons test
+```bash
+scons test
+```
 
 By default ccard-lib will be installed at `/usr/local/lib`, if you want to
 change the install directory please replace the "libdir" setting in
@@ -41,18 +45,22 @@ change the install directory please replace the "libdir" setting in
 
 The following command will build and install card-lib PHP extension:
 
-	scons install-php
+```bash
+scons install-php
+```
 
 [SWIG](http://www.swig.org) is used to generate PHP extension, please install
-it before run this command. 
+it before run this command.
 
 ### Uninstall
 
 If you want to uninstall ccard-lib from your system, use the following
 commands:
 
-	scons -c install-php
-	scons -c install
+```bash
+scons -c install-php
+scons -c install
+```
 
 ## Examples
 
@@ -67,7 +75,7 @@ Source codes should always be formatted before committing by running script
 [astyle](http://astyle.sourceforge.net/) to do the job, so you probably want to
 install it first. **Make sure you install astyle v2.03 or later**, as the
 indenting result differs from previous versions ([see
-		here](http://astyle.sourceforge.net/news.html) for details)
+ here](http://astyle.sourceforge.net/news.html) for details)
 
 ## Reference
 
@@ -198,14 +206,15 @@ The following estimating results is calculated using bitmap with length of 2^16
 	actual: 450000, estimated: 450196, error: 0.04%
 	actual: 500000, estimated: 499516, error: 0.10%
 
-    HyperloglogPlus Counting with Murmurhash 64bit:
-    actual: 50000,  estimated: 49801,  error: 0.40%
-    actual: 100000, estimated: 101098, error: 1.10%
-    actual: 150000, estimated: 151488, error: 0.99%
-    actual: 200000, estimated: 201337, error: 0.67%
-    actual: 250000, estimated: 252130, error: 0.85%
-    actual: 300000, estimated: 301995, error: 0.66%
-    actual: 350000, estimated: 352194, error: 0.63%
-    actual: 400000, estimated: 402413, error: 0.60%
-    actual: 450000, estimated: 454293, error: 0.95%
-    actual: 500000, estimated: 503228, error: 0.65%
+	HyperloglogPlus Counting with Murmurhash 64bit:
+	actual: 50000,  estimated: 49801,  error: 0.40%
+	actual: 100000, estimated: 101098, error: 1.10%
+	actual: 150000, estimated: 151488, error: 0.99%
+	actual: 200000, estimated: 201337, error: 0.67%
+	actual: 250000, estimated: 252130, error: 0.85%
+	actual: 300000, estimated: 301995, error: 0.66%
+	actual: 350000, estimated: 352194, error: 0.63%
+	actual: 400000, estimated: 402413, error: 0.60%
+	actual: 450000, estimated: 454293, error: 0.95%
+	actual: 500000, estimated: 503228, error: 0.65%
+```
