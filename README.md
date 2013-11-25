@@ -110,6 +110,7 @@ The implemention refers [stream-lib](https://github.com/clearspring/stream-lib).
 The following estimating results is calculated using bitmap with length of 2^16
 (64k) bytes:
 
+```bash
 	Linear Counting with Murmurhash:
 	actual: 50000,  estimated: 50062,  error: 0.12%
 	actual: 100000, estimated: 99924,  error: 0.08%
