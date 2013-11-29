@@ -1,4 +1,4 @@
-[![Stories in Ready](https://badge.waffle.io/chaoslawful/ccard-lib.png)](https://waffle.io/chaoslawful/ccard-lib
+[![Stories in Ready](https://badge.waffle.io/chaoslawful/ccard-lib.png)](https://waffle.io/chaoslawful/ccard-lib)
 
 [![Build Status](https://travis-ci.org/chaoslawful/ccard-lib.png)](https://travis-ci.org/chaoslawful/ccard-lib)
 
