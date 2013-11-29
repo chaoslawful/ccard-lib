@@ -1,8 +1,6 @@
 [![Stories in Ready](https://badge.waffle.io/chaoslawful/ccard-lib.png)](https://waffle.io/chaoslawful/ccard-lib)  
 [![Build Status](https://travis-ci.org/chaoslawful/ccard-lib.png)](https://travis-ci.org/chaoslawful/ccard-lib)
 
-## Description
-
 C library for estimating cardinality in data streams, in which case it is
 infeasible to store all events in memory.
 
@@ -62,11 +60,86 @@ scons -c install-php
 scons -c install
 ```
 
-## Examples
+## Synopsis
 
-See test-cases in subdirectory
-[t/](https://github.com/chaoslawful/ccard-lib/tree/master/t) to learn how to
-use ccard-lib.
+### Estimate Cardinality
+
+```c
+#include "ccard_common.h"
+#include "adaptive_counting.h"
+
+int main(int argc, char **argv) {
+    int64_t i, esti;
+
+    /* construct context for cardinality estimator */
+    /* use xxx_cnt_init to construct context */
+    adp_cnt_ctx_t *ctx = adp_cnt_init(NULL, 16, CCARD_HASH_MURMUR);
+
+    printf("Adaptive Counting with Murmurhash:\n");
+
+    /* add 500,000 elements to set */
+    for (i = 1; i <= 500000L; i++) {
+        /* use xxx_cnt_offer to add new element to set */
+        adp_cnt_offer(ctx, &i, sizeof(int64_t));
+
+        /* print estimate result every 50,000 elements has been added */
+        if (i % 50000 == 0) {
+            /* use xxx_cnt_card to get estimate result */
+            esti = adp_cnt_card(ctx);
+            printf("actual: %9lu, estimated: %9lu, error: %+7.2f%%\n",
+                   (long unsigned int)i, (long unsigned int)esti, (double)(esti - i) / i * 100);
+        }
+    }
+    printf("\n");
+
+    /* use xxx_cnt_fini to destory context */
+    adp_cnt_fini(ctx);
+}
+```
+
+## Merge Bitmaps
+```c
+#include "ccard_common.h"
+#include "adaptive_counting.h"
+
+int main(int argc, char **argv) {
+    int64_t i, esti;
+
+    /* for merging, contexts must have same length of bitmap and hash algorithm */
+    adp_cnt_ctx_t *ctx = adp_cnt_init(NULL, 16, CCARD_HASH_LOOKUP3);
+    adp_cnt_ctx_t *tbm1 = adp_cnt_init(NULL, 16, CCARD_HASH_LOOKUP3);
+    adp_cnt_ctx_t *tbm2 = adp_cnt_init(NULL, 16, CCARD_HASH_LOOKUP3);
+
+    int32_t m = 1 << 16;
+    /* bitmaps */
+    uint8_t buf1[m + 3], buf2[m + 3];
+    uint32_t len1 = m + 3, len2 = m + 3;
+
+    for (i = 1; i <= 20000L; i++) {
+        adp_cnt_offer(ctx, &i, sizeof(uint64_t));
+    }
+    for (i = 10000L; i <= 30000L; i++) {
+        adp_cnt_offer(tbm1, &i, sizeof(uint64_t));
+    }
+    /* use xxx_cnt_get_bytes to get bitmap from context */
+    adp_cnt_get_bytes(tbm1, buf1, &len1);
+    for (i = 20000L; i <= 40000L; i++) {
+        adp_cnt_offer(tbm2, &i, sizeof(uint64_t));
+    }
+    adp_cnt_get_bytes(tbm2, buf2, &len2);
+
+    /* use xxx_cnt_merge_bytes to merge bitmaps to context */
+    adp_cnt_merge_bytes(ctx, buf1, len1, buf2, len2, NULL);
+    esti = adp_cnt_card(ctx);
+
+    printf("actual:40000, estimated: %9lu, error: %+7.2f%%\n",
+           (long unsigned int)esti, (double)(esti - 40000) / 40000 * 100);
+
+    adp_cnt_fini(tbm2);
+    adp_cnt_fini(tbm1);
+    adp_cnt_fini(ctx);
+}
+```
 
 ## For Developers
 
