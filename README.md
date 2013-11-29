@@ -1,4 +1,5 @@
-[![Stories in Ready](https://badge.waffle.io/chaoslawful/ccard-lib.png)](https://waffle.io/chaoslawful/ccard-lib)  
+[![Stories in Ready](https://badge.waffle.io/chaoslawful/ccard-lib.png)](https://waffle.io/chaoslawful/ccard-lib
+
 [![Build Status](https://travis-ci.org/chaoslawful/ccard-lib.png)](https://travis-ci.org/chaoslawful/ccard-lib)
 
 C library for estimating cardinality in data streams, in which case it is
@@ -97,7 +98,7 @@ int main(int argc, char **argv) {
 }
 ```
 
-## Merge Bitmaps
+### Merge Bitmaps
 ```c
 #include "ccard_common.h"
 #include "adaptive_counting.h"
@@ -154,27 +155,32 @@ indenting result differs from previous versions ([see
 
 ### Linear Counting
 
- * K.-Y. Whang, B. T. Vander-Zanden, and H. M. Taylor. **A Linear-Time 
- Probabilistic Counting Algorithm for Database Applications**. ACM 
+ * K.-Y. Whang, B. T. Vander-Zanden, and H. M. Taylor. **[A Linear-Time
+ Probabilistic Counting Algorithm for Database Applications]
+ (http://dblab.kaist.ac.kr/Publication/pdf/ACM90_TODS_v15n2.pdf)**. ACM
  Transactions on Database Systems, 15(2):208-229, 1990.
 
 ### LogLog Counting and Adaptive Counting
 
- * Marianne Durand and Philippe Flajolet. **LogLog counting of large
- cardinalities**. In ESA03, volume 2832 of LNCS, pages 605-617, 2003.
- * Min Cai, Jianping Pan, Yu K. Kwok, and Kai Hwang. **Fast and accurate
- traffic matrix measurement using adaptive cardinality counting**. In
+ * Marianne Durand and Philippe Flajolet. **[LogLog counting of large
+ cardinalities](http://algo.inria.fr/flajolet/Publications/DuFl03-LNCS.pdf)**.
+ In ESA03, volume 2832 of LNCS, pages 605-617, 2003.
+ * Min Cai, Jianping Pan, Yu K. Kwok, and Kai Hwang. **[Fast and accurate
+ traffic matrix measurement using adaptive cardinality counting]
+ (http://gridsec.usc.edu/files/tr/tr-2005-12.pdf)**. In
  MineNet '05: Proceedings of the 2005 ACM SIGCOMM workshop on
  Mining network data, pages 205-206, New York, NY, USA, 2005. ACM.
 
 ### HyperLogLog Counting and HyperLogLog++ Counting
 
  * P. Flajolet, E. Fusy, O. Gandouet, and F. Meunier.
- **Hyperloglog: The analysis of a near-optimal cardinality
- estimation algorithm**. Disc. Math. and Theor. Comp. Sci., AH:127-146, 2007.
- * Stefan Heule, Marc Nunkesser, Alex Hall. **HyperLogLog in Practice:
+ **[Hyperloglog: The analysis of a near-optimal cardinality
+ estimation algorithm](http://algo.inria.fr/flajolet/Publications/FlFuGaMe07.pdf)**.
+ Disc. Math. and Theor. Comp. Sci., AH:127-146, 2007.
+ * Stefan Heule, Marc Nunkesser, Alex Hall. **[HyperLogLog in Practice:
  Algorithmic Engineering of a State of The Art Cardinality Estimation
- Algorithm**. In Proceedings of the EDBT 2013 Conference, ACM, Genoa, Italy.
+ Algorithm](http://static.googleusercontent.com/media/research.google.com/zh-CN//pubs/archive/40671.pdf)**.
+ In Proceedings of the EDBT 2013 Conference, ACM, Genoa, Italy.
 
 The implemention refers [stream-lib](https://github.com/clearspring/stream-lib).
 
