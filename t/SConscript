@@ -1,7 +1,7 @@
 import os
 
 env = Environment(
-        LIBS = ['pthread', 'gtest', 'gtest_main', 'ccard-lib.0.1'],
+        LIBS = ['gtest', 'gtest_main', 'pthread', 'ccard-lib.0.1'],
         CPPPATH = ['../include'],
         LIBPATH = ['../', '/usr/lib', '/usr/lib64', '/usr/local/lib', '/usr/local/lib64'],
         RPATH = ['./', '../'],
