@@ -371,7 +371,7 @@ int hllp_cnt_get_bytes(hllp_cnt_ctx_t *ctx, void *buf, uint32_t *len)
      | algorithm[1] | hash[1] | bitmap length(base-2 log)[1] | bitmap[n] |
      +--------------+---------+------------------------------+-----------+
      */
-    uint8_t algo = CCARD_ALGO_HYPERLOGLOG;
+    uint8_t algo = CCARD_ALGO_HYPERLOGLOGPLUS;
     uint8_t *out = (uint8_t *)buf;
 
     if (!ctx || !len || (buf && *len < ctx->m + 3)) {
@@ -489,7 +489,7 @@ int hllp_cnt_merge_bytes(hllp_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...
         /* Cannot merge bitmap of different sizes,
         different hash functions or different algorithms */
         if ((ctx->m + 3 != len) ||
-            (in[0] != CCARD_ALGO_HYPERLOGLOG) ||
+            (in[0] != CCARD_ALGO_HYPERLOGLOGPLUS) ||
             (in[1] != ctx->hf)) {
 
             ctx->err = CCARD_ERR_MERGE_FAILED;
@@ -505,7 +505,7 @@ int hllp_cnt_merge_bytes(hllp_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...
             len = va_arg(vl, uint32_t);
 
             if ((ctx->m + 3 != len) ||
-                (in[0] != CCARD_ALGO_HYPERLOGLOG) ||
+                (in[0] != CCARD_ALGO_HYPERLOGLOGPLUS) ||
                 (in[1] != ctx->hf)) {
 
                 ctx->err = CCARD_ERR_MERGE_FAILED;
