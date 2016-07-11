@@ -123,7 +123,11 @@ hll_cnt_ctx_t *hll_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
 
     if (buf) {
         // initial bitmap was given
-        uint8_t log2m = buf ? num_of_trail_zeros(len_or_k) : len_or_k;
+        if(len_or_k <= 3){
+          return NULL;
+        }
+        uint32_t data_segment_size = len_or_k - 3;
+        uint8_t log2m = num_of_trail_zeros(data_segment_size);
 
         if (buf[0] != CCARD_ALGO_HYPERLOGLOG ||
             buf[1] != hf ||
@@ -133,7 +137,7 @@ hll_cnt_ctx_t *hll_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
             return NULL;
         }
 
-        return hll_cnt_raw_init(buf + 3, len_or_k, hf);
+        return hll_cnt_raw_init(buf + 3, data_segment_size, hf);
     }
 
     return hll_cnt_raw_init(NULL, len_or_k, hf);
@@ -440,4 +444,3 @@ const char *hll_cnt_errstr(int err)
 }
 
 // vi:ft=c ts=4 sw=4 fdm=marker et
-
