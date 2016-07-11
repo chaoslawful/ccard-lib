@@ -265,7 +265,7 @@ hllp_cnt_ctx_t *hllp_cnt_init(const void *obuf, uint32_t len_or_k)
           return NULL;
         }
         uint32_t data_segment_size = len_or_k - 3;
-        uint8_t log2m = data_segment_size;
+        uint8_t log2m = num_of_trail_zeros(data_segment_size);
 
         if (buf[0] != CCARD_ALGO_HYPERLOGLOGPLUS ||
             buf[1] != hf ||
