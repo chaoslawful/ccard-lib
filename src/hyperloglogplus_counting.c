@@ -405,7 +405,6 @@ int hllp_cnt_merge(hllp_cnt_ctx_t *ctx, hllp_cnt_ctx_t *tbm, ...)
             ctx->err = CCARD_ERR_MERGE_FAILED;
             return -1;
         }
-
         for (i = 1; i < ctx->m; i++) {
             if (tbm->M[i] > ctx->M[i]) {
                 ctx->M[i] = tbm->M[i];
@@ -437,6 +436,7 @@ int hllp_cnt_merge_raw_bytes(hllp_cnt_ctx_t *ctx, const void *buf, uint32_t len,
     va_list vl;
     uint8_t *in;
     hllp_cnt_ctx_t *bctx;
+    int result;
 
     if (!ctx) {
         return -1;
@@ -450,9 +450,17 @@ int hllp_cnt_merge_raw_bytes(hllp_cnt_ctx_t *ctx, const void *buf, uint32_t len,
             return -1;
         }
 
-        bctx = hllp_cnt_raw_init(in, ctx->m);
-        hllp_cnt_merge(ctx, bctx, NULL);
+        bctx = hllp_cnt_raw_init(in, len);
+        if(bctx == NULL){
+          ctx->err = CCARD_ERR_MERGE_FAILED;
+          return -1;
+        }
+        result = hllp_cnt_merge(ctx, bctx, NULL);
         hllp_cnt_fini(bctx);
+        if(result != CCARD_OK){
+          ctx->err = CCARD_ERR_MERGE_FAILED;
+          return -1;
+        }
 
         va_start(vl, len);
         while ((in = (uint8_t *)va_arg(vl, const void *)) != NULL) {
@@ -463,9 +471,17 @@ int hllp_cnt_merge_raw_bytes(hllp_cnt_ctx_t *ctx, const void *buf, uint32_t len,
                 return -1;
             }
 
-            bctx = hllp_cnt_raw_init(in, ctx->m);
-            hllp_cnt_merge(ctx, bctx, NULL);
+            bctx = hllp_cnt_raw_init(in, len);
+            if(bctx == NULL){
+              ctx->err = CCARD_ERR_MERGE_FAILED;
+              return -1;
+            }
+            result = hllp_cnt_merge(ctx, bctx, NULL);
             hllp_cnt_fini(bctx);
+            if(result != CCARD_OK){
+              ctx->err = CCARD_ERR_MERGE_FAILED;
+              return -1;
+            }
         }
         va_end(vl);
     }
@@ -479,11 +495,11 @@ int hllp_cnt_merge_bytes(hllp_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...
     va_list vl;
     uint8_t *in;
     hllp_cnt_ctx_t *bctx;
+    int result;
 
     if (!ctx) {
         return -1;
     }
-
     if (buf) {
         in = (uint8_t *)buf;
         /* Cannot merge bitmap of different sizes,
@@ -496,9 +512,18 @@ int hllp_cnt_merge_bytes(hllp_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...
             return -1;
         }
 
-        bctx = hllp_cnt_init(in, ctx->m);
-        hllp_cnt_merge(ctx, bctx, NULL);
+        bctx = hllp_cnt_init(in, len);
+        if(bctx == NULL){
+          ctx->err = CCARD_ERR_MERGE_FAILED;
+          return -1;
+        }
+        result = hllp_cnt_merge(ctx, bctx, NULL);
         hllp_cnt_fini(bctx);
+
+        if(result != CCARD_OK){
+          ctx->err = CCARD_ERR_MERGE_FAILED;
+          return -1;
+        }
 
         va_start(vl, len);
         while ((in = (uint8_t *)va_arg(vl, const void *)) != NULL) {
@@ -512,13 +537,23 @@ int hllp_cnt_merge_bytes(hllp_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...
                 return -1;
             }
 
-            bctx = hllp_cnt_init(in, ctx->m);
-            hllp_cnt_merge(ctx, bctx, NULL);
+            bctx = hllp_cnt_init(in, len);
+            if(bctx == NULL){
+              ctx->err = CCARD_ERR_MERGE_FAILED;
+              return -1;
+            }
+            result = hllp_cnt_merge(ctx, bctx, NULL);
             hllp_cnt_fini(bctx);
+            if(result != CCARD_OK){
+              ctx->err = CCARD_ERR_MERGE_FAILED;
+              break;
+            }
         }
         va_end(vl);
+        if(ctx->err != CCARD_OK){
+          return -1;
+        }
     }
-
     ctx->err = CCARD_OK;
     return 0;
 }
