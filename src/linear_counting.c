@@ -28,6 +28,18 @@ static uint8_t count_ones(uint8_t b)
     return ones;
 }
 
+static uint8_t calc_log2m(uint32_t m)
+{
+    uint8_t log2m = 1;
+
+    while((m & 0x01) == 0) {
+        log2m++;
+        m >>= 1;
+    }
+
+    return log2m;
+}
+
 lnr_cnt_ctx_t *lnr_cnt_raw_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
 {
     lnr_cnt_ctx_t *ctx;
@@ -75,14 +87,22 @@ lnr_cnt_ctx_t *lnr_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
 
     if (buf) {
         // initial bitmap was given
+        if(len_or_k <= 3) {
+            return NULL;
+        }
+
+        uint32_t data_segment_size = len_or_k - 3;
+        uint8_t log2m = calc_log2m(data_segment_size);
+
         if (buf[0] != CCARD_ALGO_LINEAR ||
-            buf[1] != hf) {
+            buf[1] != hf ||
+            buf[2] != log2m) {
 
             // counting algorithm, hash function or length not match
             return NULL;
         }
 
-        return lnr_cnt_raw_init(buf + 3, len_or_k, hf);
+        return lnr_cnt_raw_init(buf + 3, data_segment_size, hf);
     }
 
     return lnr_cnt_raw_init(NULL, len_or_k, hf);
@@ -109,12 +129,10 @@ int lnr_cnt_offer(lnr_cnt_ctx_t *ctx, const void *buf, uint32_t len)
     }
 
     switch (ctx->hf) {
-        case CCARD_HASH_MURMUR:
-            hash = (uint64_t)murmurhash((void *)buf, len, -1);
-            break;
         case CCARD_HASH_LOOKUP3:
             hash = lookup3ycs64_2((const char *)buf);
             break;
+        case CCARD_HASH_MURMUR:
         default:
             /* default to use murmurhash function */
             hash = (uint64_t)murmurhash((void *)buf, len, -1);
@@ -159,16 +177,10 @@ int lnr_cnt_get_bytes(lnr_cnt_ctx_t *ctx, void *buf, uint32_t *len)
      */
     uint8_t algo = CCARD_ALGO_LINEAR;
     uint8_t *out = (uint8_t *)buf;
-    uint8_t log2m = 1;
-    uint32_t m = ctx->m;
+    uint8_t log2m = calc_log2m(ctx->m);
 
     if (!ctx || !len || (buf && *len < ctx->m + 3)) {
         return -1;
-    }
-
-    while ((m & 0x01) == 0) {
-        log2m++;
-        m >>= 1;
     }
 
     if (buf) {

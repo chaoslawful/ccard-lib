@@ -261,9 +261,10 @@ hllp_cnt_ctx_t *hllp_cnt_init(const void *obuf, uint32_t len_or_k)
 
     if (buf) {
         // initial bitmap was given
-        if(len_or_k <= 3){
-          return NULL;
+        if(len_or_k <= 3) {
+            return NULL;
         }
+
         uint32_t data_segment_size = len_or_k - 3;
         uint8_t log2m = num_of_trail_zeros(data_segment_size);
 

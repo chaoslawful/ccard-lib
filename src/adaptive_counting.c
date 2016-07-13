@@ -594,7 +594,20 @@ adp_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t opt)
     uint8_t *buf = (uint8_t *)obuf;
 
     if (buf) {
-        uint8_t k = num_of_trail_zeros(len_or_k);
+        if(len_or_k <= 3) {
+            return NULL;
+        }
+
+        uint32_t data_segment_size = len_or_k - 3;
+        uint8_t k = 0;
+
+        if(IS_SPARSE_BMP(&buf[3])) {
+            /* sparse bitmap, get k from the 1st byte of bitmap */
+            k = K_FROM_ID(buf[3]);
+        } else {
+            /* dense bitmap, calculate k from total length of bitmap */
+            k = num_of_trail_zeros(data_segment_size);
+        }
 
         if (buf[0] != CCARD_ALGO_ADAPTIVE ||
             buf[1] != HF(opt) ||
@@ -604,7 +617,7 @@ adp_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t opt)
             return NULL;
         }
 
-        return adp_cnt_raw_init(buf + 3, len_or_k, opt);
+        return adp_cnt_raw_init(buf + 3, data_segment_size, opt);
     }
 
     return adp_cnt_raw_init(NULL, len_or_k, opt);

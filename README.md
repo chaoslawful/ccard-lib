@@ -18,7 +18,7 @@ more information about it.
 
 Building PHP extension of ccard-lib needs [SWIG](http://www.swig.org/) to be
 installed. Running unit-tests needs
-[googletest](http://code.google.com/p/googletest/) to be installed.
+[googletest](https://github.com/google/googletest) to be installed.
 
 ### Building as Library
 

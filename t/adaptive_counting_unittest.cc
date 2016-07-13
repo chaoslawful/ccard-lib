@@ -476,5 +476,53 @@ TEST(AdaptiveCounting, SparseNormalMergeCtx)
     EXPECT_EQ(rc, 0);
 }
 
+/**
+ * Serialize & deserialize dense bitmap
+ * */
+TEST(AdaptiveCounting, Deserialize)
+{
+    adp_cnt_ctx_t *ctx = adp_cnt_init(NULL, 16, CCARD_HASH_MURMUR);
+    EXPECT_NE(ctx, (adp_cnt_ctx_t *)NULL);
+
+    for(int i = 1; i < 100; i++) {
+        adp_cnt_offer(ctx, &i, sizeof(i));
+    }
+    int64_t esti = adp_cnt_card(ctx);
+
+    uint32_t num_bytes = 0;
+    EXPECT_EQ(adp_cnt_get_bytes(ctx, NULL, &num_bytes), 0);
+
+    uint8_t buf[num_bytes];
+    EXPECT_EQ(adp_cnt_get_bytes(ctx, buf, &num_bytes), 0);
+
+    adp_cnt_ctx_t *other = adp_cnt_init(buf, num_bytes, CCARD_HASH_MURMUR);
+    EXPECT_NE(other, (adp_cnt_ctx_t *)NULL);
+    EXPECT_EQ(adp_cnt_card(other), esti);
+}
+
+/**
+ * Serialize & deserialize sparse bitmap
+ * */
+TEST(AdaptiveCounting, SparseDeserialize)
+{
+    adp_cnt_ctx_t *ctx = adp_cnt_init(NULL, 16, CCARD_HASH_MURMUR | CCARD_OPT_SPARSE);
+    EXPECT_NE(ctx, (adp_cnt_ctx_t *)NULL);
+
+    for(int i = 1; i < 100; i++) {
+        adp_cnt_offer(ctx, &i, sizeof(i));
+    }
+    int64_t esti = adp_cnt_card(ctx);
+
+    uint32_t num_bytes = 0;
+    EXPECT_EQ(adp_cnt_get_bytes(ctx, NULL, &num_bytes), 0);
+
+    uint8_t buf[num_bytes];
+    EXPECT_EQ(adp_cnt_get_bytes(ctx, buf, &num_bytes), 0);
+
+    adp_cnt_ctx_t *other = adp_cnt_init(buf, num_bytes, CCARD_HASH_MURMUR | CCARD_OPT_SPARSE);
+    EXPECT_NE(other, (adp_cnt_ctx_t *)NULL);
+    EXPECT_EQ(adp_cnt_card(other), esti);
+}
+
 // vi:ft=c ts=4 sw=4 fdm=marker et
 

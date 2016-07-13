@@ -123,9 +123,10 @@ hll_cnt_ctx_t *hll_cnt_init(const void *obuf, uint32_t len_or_k, uint8_t hf)
 
     if (buf) {
         // initial bitmap was given
-        if(len_or_k <= 3){
-          return NULL;
+        if(len_or_k <= 3) {
+            return NULL;
         }
+
         uint32_t data_segment_size = len_or_k - 3;
         uint8_t log2m = num_of_trail_zeros(data_segment_size);
 
@@ -191,10 +192,6 @@ int hll_cnt_offer(hll_cnt_ctx_t *ctx, const void *buf, uint32_t len)
     }
 
     switch (ctx->hf) {
-        case CCARD_HASH_MURMUR:
-            x = (uint64_t)murmurhash((void *)buf, len, -1);
-            hl = 32;
-            break;
         case CCARD_HASH_LOOKUP3:
             x = lookup3ycs64_2((const char *)buf);
             hl = 64;
@@ -203,6 +200,7 @@ int hll_cnt_offer(hll_cnt_ctx_t *ctx, const void *buf, uint32_t len)
             x = (uint64_t)murmurhash64_no_seed((void *)buf, len);
             hl = 64;
             break;
+        case CCARD_HASH_MURMUR:
         default:
             /* default to use murmurhash function */
             x = (uint64_t)murmurhash((void *)buf, len, -1);

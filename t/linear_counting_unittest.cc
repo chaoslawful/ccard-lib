@@ -227,5 +227,29 @@ TEST(LinearCounting, Merge)
     EXPECT_EQ(rc, 0);
 }
 
+/**
+ * Serialize & deserialize bitmap
+ * */
+TEST(LinearCounting, Deserialize)
+{
+    lnr_cnt_ctx_t *ctx = lnr_cnt_init(NULL, 16, CCARD_HASH_MURMUR);
+    EXPECT_NE(ctx, (lnr_cnt_ctx_t *)NULL);
+
+    for(int i = 1; i < 100; i++) {
+        lnr_cnt_offer(ctx, &i, sizeof(i));
+    }
+    int64_t esti = lnr_cnt_card(ctx);
+
+    uint32_t num_bytes = 0;
+    EXPECT_EQ(lnr_cnt_get_bytes(ctx, NULL, &num_bytes), 0);
+
+    uint8_t buf[num_bytes];
+    EXPECT_EQ(lnr_cnt_get_bytes(ctx, buf, &num_bytes), 0);
+
+    lnr_cnt_ctx_t *other = lnr_cnt_init(buf, num_bytes, CCARD_HASH_MURMUR);
+    EXPECT_NE(other, (lnr_cnt_ctx_t *)NULL);
+    EXPECT_EQ(lnr_cnt_card(other), esti);
+}
+
 // vi:ft=c ts=4 sw=4 fdm=marker et
 

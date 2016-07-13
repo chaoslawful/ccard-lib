@@ -8,7 +8,7 @@ extern "C" {
 #endif
 
 #define HF(opt) ((opt) & 0x0f)
-#define IS_SPARSE_BMP(bmp) (bmp[0] & 0x80)
+#define IS_SPARSE_BMP(bmp) ((bmp)[0] & 0x80)
 #define MAKE_SPARSE_ID(k) (0x80 | (k))
 #define K_FROM_ID(id) (0x7f & (id))
 
