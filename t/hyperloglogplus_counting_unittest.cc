@@ -78,10 +78,56 @@ TEST(HyperloglogPlusCounting, Deserialize)
 {
     hllp_cnt_ctx_t *ctx = hllp_cnt_init(NULL, 16);
     EXPECT_NE(ctx, (hllp_cnt_ctx_t *)NULL);
+
+    for(int i = 1; i < 100; i++) {
+        hllp_cnt_offer(ctx, &i, sizeof(i));
+    }
+    uint64_t esti = hllp_cnt_card(ctx);
+
     uint32_t num_bytes = 0;
     EXPECT_EQ(hllp_cnt_get_bytes(ctx, NULL, &num_bytes), 0);
     uint8_t buf[num_bytes];
     EXPECT_EQ(hllp_cnt_get_bytes(ctx, buf, &num_bytes), 0);
     hllp_cnt_ctx_t *other = hllp_cnt_init(buf, num_bytes);
     EXPECT_NE(other, (hllp_cnt_ctx_t *)NULL);
+    EXPECT_EQ(hllp_cnt_card(other), esti);
 }
+
+TEST(HyperloglogPlusCounting, MergeBytes)
+{
+    hllp_cnt_ctx_t *ctx = hllp_cnt_init(NULL, 10);
+    hllp_cnt_ctx_t *other = hllp_cnt_init(NULL, 10);
+    int64_t i = 1;
+    hllp_cnt_offer(other, &i, sizeof(int64_t));
+    uint8_t buf[1027];
+    uint32_t len = 1027;
+    int result = hllp_cnt_get_bytes(other, buf, &len);
+    EXPECT_EQ(result, 0);
+    result = hllp_cnt_merge_bytes(ctx, buf, 1027, NULL);
+    EXPECT_EQ(result, 0);
+    EXPECT_EQ(hllp_cnt_card(ctx), 1);
+}
+
+TEST(HyperloglogPlusCounting, MergeBytesVariadic)
+{
+    hllp_cnt_ctx_t *ctx    = hllp_cnt_init(NULL, 10);
+    hllp_cnt_ctx_t *other1 = hllp_cnt_init(NULL, 10);
+    hllp_cnt_ctx_t *other2 = hllp_cnt_init(NULL, 10);
+    int64_t i = 1;
+    hllp_cnt_offer(other1, &i, sizeof(int64_t));
+    i = 2;
+    hllp_cnt_offer(other2, &i, sizeof(int64_t));
+
+    uint8_t buf1[1027];
+    uint8_t buf2[1027];
+
+    uint32_t len = 1027;
+    int result = hllp_cnt_get_bytes(other1, buf1, &len);
+    EXPECT_EQ(result, 0);
+    result = hllp_cnt_get_bytes(other2, buf2, &len);
+    EXPECT_EQ(result, 0);
+    result = hllp_cnt_merge_bytes(ctx, buf1, 1027, buf2, 1027, NULL);
+    EXPECT_EQ(result, 0);
+    EXPECT_EQ(hllp_cnt_card(ctx), 2);
+}
+

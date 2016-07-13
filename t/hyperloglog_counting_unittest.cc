@@ -232,12 +232,19 @@ TEST(HyperloglogCounting, Deserialize)
 {
     hll_cnt_ctx_t *ctx = hll_cnt_init(NULL, 16, CCARD_HASH_MURMUR);
     EXPECT_NE(ctx, (hll_cnt_ctx_t *)NULL);
+
+    for(int i = 1; i < 100; i++) {
+        hll_cnt_offer(ctx, &i, sizeof(i));
+    }
+    uint64_t esti = hll_cnt_card(ctx);
+
     uint32_t num_bytes = 0;
     EXPECT_EQ(hll_cnt_get_bytes(ctx, NULL, &num_bytes), 0);
     uint8_t buf[num_bytes];
     EXPECT_EQ(hll_cnt_get_bytes(ctx, buf, &num_bytes), 0);
     hll_cnt_ctx_t *other = hll_cnt_init(buf, num_bytes, CCARD_HASH_MURMUR);
     EXPECT_NE(other, (hll_cnt_ctx_t *)NULL);
+    EXPECT_EQ(hll_cnt_card(other), esti);
 }
 
 // vi:ft=c ts=4 sw=4 fdm=marker et
