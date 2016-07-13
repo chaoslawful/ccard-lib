@@ -74,3 +74,14 @@ TEST(HyperloglogPlusCounting, Counting)
     EXPECT_EQ(rc, 0);
 }
 
+TEST(HyperloglogPlusCounting, Deserialize)
+{
+  hllp_cnt_ctx_t * ctx = hllp_cnt_init(NULL, 16);
+  EXPECT_NE(ctx, (hllp_cnt_ctx_t *)NULL);
+  uint32_t num_bytes = 0;
+  EXPECT_EQ(hllp_cnt_get_bytes(ctx, NULL, &num_bytes), 0);
+  uint8_t buf[num_bytes];
+  EXPECT_EQ(hllp_cnt_get_bytes(ctx, buf, &num_bytes), 0);
+  hllp_cnt_ctx_t * other = hllp_cnt_init(buf, num_bytes);
+  EXPECT_NE(other, (hllp_cnt_ctx_t *)NULL);
+}
