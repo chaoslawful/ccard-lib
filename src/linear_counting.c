@@ -30,7 +30,7 @@ static uint8_t count_ones(uint8_t b)
 
 static uint8_t calc_log2m(uint32_t m)
 {
-    uint8_t log2m = 1;
+    uint8_t log2m = 0;
 
     while((m & 0x01) == 0) {
         log2m++;
