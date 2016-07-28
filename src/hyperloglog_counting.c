@@ -367,7 +367,7 @@ int hll_cnt_merge_bytes(hll_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
             return -1;
         }
 
-        bctx = hll_cnt_init(in, ctx->m, ctx->hf);
+        bctx = hll_cnt_init(in, len, ctx->hf);
         hll_cnt_merge(ctx, bctx, NULL);
         hll_cnt_fini(bctx);
 
@@ -383,7 +383,7 @@ int hll_cnt_merge_bytes(hll_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
                 return -1;
             }
 
-            bctx = hll_cnt_init(in, ctx->m, ctx->hf);
+            bctx = hll_cnt_init(in, len, ctx->hf);
             hll_cnt_merge(ctx, bctx, NULL);
             hll_cnt_fini(bctx);
         }
