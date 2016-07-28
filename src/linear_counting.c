@@ -302,7 +302,7 @@ int lnr_cnt_merge_bytes(lnr_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
             return -1;
         }
 
-        bctx = lnr_cnt_init(in, ctx->m, ctx->hf);
+        bctx = lnr_cnt_init(in, len, ctx->hf);
         lnr_cnt_merge(ctx, bctx, NULL);
         lnr_cnt_fini(bctx);
 
@@ -318,7 +318,7 @@ int lnr_cnt_merge_bytes(lnr_cnt_ctx_t *ctx, const void *buf, uint32_t len, ...)
                 return -1;
             }
 
-            bctx = lnr_cnt_init(in, ctx->m, ctx->hf);
+            bctx = lnr_cnt_init(in, len, ctx->hf);
             lnr_cnt_merge(ctx, bctx, NULL);
             lnr_cnt_fini(bctx);
         }
