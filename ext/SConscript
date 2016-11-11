@@ -15,12 +15,18 @@ env["ENV"].update(x for x in os.environ.items() if x[0].startswith("CCC_"))
 env.ParseConfig("php-config --includes")
 phpLibExtDir = '$PREFIX/' + commands.getoutput("php-config --extension-dir")
 
+link_flags = []
+# add extra linking options under OSX
+if env['PLATFORM'] == 'darwin':
+    link_flags.append('-Wl,-undefined,dynamic_lookup')
+
 swigSl = env.SharedLibrary(
         '../php_card.so',
         ['php_ccard.i'],
         LIBS=['ccard-lib'],
         LIBPATH=['#'],
-        CCFLAGS=["-Iinclude"]
+        CCFLAGS=["-Iinclude"],
+        LINKFLAGS=link_flags,
         )
 
 phpLib = env.Install(phpLibExtDir, [swigSl])
